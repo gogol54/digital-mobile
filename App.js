@@ -1,20 +1,49 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { 
+    useFonts, 
+    Montserrat_400Regular, 
+    Montserrat_500Medium, 
+    Montserrat_700Bold
+} from '@expo-google-fonts/montserrat'
+	import { 
+		Audiowide_400Regular 
+} from '@expo-google-fonts/audiowide'
+import React, { useEffect } from 'react'
+import Routes from './src/routes'
+import { Provider } from 'react-native-paper'
+import * as SplashScreen from 'expo-splash-screen'
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'; // Importando o GestureHandlerRootView
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+SplashScreen.preventAutoHideAsync();
+
+const App = () => {
+	const [fontsLoaded] = useFonts({
+		Audiowide_400Regular,
+		Montserrat_400Regular, 
+		Montserrat_500Medium, 
+		Montserrat_700Bold
+	});
+	
+	// Esconde o Splash quando as fontes forem carregadas
+	useEffect(() => {
+		if (fontsLoaded) {
+			SplashScreen.hideAsync();
+		}
+	}, [fontsLoaded]);
+
+	if (!fontsLoaded) {
+		return null; // Enquanto carrega, mantém o Splash visível
+	}
+
+
+	return (
+		<GestureHandlerRootView style={{flex: 1}}>
+			<Provider >
+				<Routes/>
+			</Provider>
+		</GestureHandlerRootView>
+	)
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
