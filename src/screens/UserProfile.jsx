@@ -4,11 +4,17 @@ import OccupationInfo from '../components/profile/OccupationInfo';
 import PersonalInfo from '../components/profile/PersonalInfo';
 
 const UserProfile = ({ route }) => {
-  const { flag } = route.params;  // Recebendo a flag dos parâmetros de navegação
+  const { flag } = route.params;  
 
   return (
     <View style={styles.container}>
-      {flag === 'person' ? <PersonalInfo /> : <OccupationInfo />}
+      {
+        flag === 'personal' 
+        ? 
+          <PersonalInfo /> 
+        : 
+          <OccupationInfo />
+      }
     </View>
   );
 };

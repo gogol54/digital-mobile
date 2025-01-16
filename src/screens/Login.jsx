@@ -1,90 +1,167 @@
-import React, { useState } from 'react';
-import { Button, TextInput } from 'react-native-paper';
-import { Image, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  ActivityIndicator, 
+  StyleSheet, 
+  KeyboardAvoidingView,
+  Image 
+} from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { MaterialIcons } from "@expo/vector-icons"
+import { useSelector, useDispatch } from "react-redux"
+import { login } from "../lib/actions/userRequest"
 
 const Login = () => {
-  const navigation = useNavigation(); 
-  const [values, setValues] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const dispatch = useDispatch()
 
-  const handleChange = (field, value) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      [field]: value,
-    }));
+  const navigation = useNavigation();
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const payload = { email, password };
+      await login(dispatch, payload, navigation, setLoading);
+    } catch (error) {
+      console.error("Erro ao fazer login: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const onsubmitButton = () => {
-    console.log(values);
-    navigation.navigate('Home')
-  };
-
-  const buttonColor = styles.buttonDecoration.backgroundColor; // Captura a cor do botão
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
-        <Image
-          style={styles.stretch}
-          source={require('../../assets/login-bg.png')}
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Image
+        source={require('../../assets/login-bg-inhert.png')}
+        style={styles.logo}
+      />
+      <Text style={styles.logoText}>🦷 Centro de Radiologia Odontológica Digital</Text>
+      <View style={styles.formContainer}>
+        {/* Input de E-mail */}
+        <TextInput
+          style={styles.input}
+          placeholder="E-mail"
+          placeholderTextColor="#6C757D"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
         />
-      </SafeAreaView>
-      <TextInput
-        style={styles.textDecoration}
-        label="Email"
-        name="email"
-        mode="outlined"
-        outlineColor='#1f2937' // Aplica a cor do botão
-        activeOutlineColor={buttonColor} // Aplica a cor ao focar no campo
-        onChangeText={(text) => handleChange('email', text)}
-      />
-      <TextInput
-        style={styles.textDecoration}
-        label="Senha"
-        name="password"
-        mode="outlined"
-        secureTextEntry
-        outlineColor='#1f2937' // Aplica a cor do botão
-        activeOutlineColor={buttonColor} // Aplica a cor ao focar no campo
-        onChangeText={(text) => handleChange('password', text)}
-      />
-      <Button
-        style={styles.buttonDecoration}
-        mode="contained"
-        onPress={onsubmitButton}
-      >
-        Entrar
-      </Button>
-    </View>
+        {/* Input de Senha */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.inputPassword}
+            placeholder="Senha"
+            placeholderTextColor="#6C757D"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <MaterialIcons 
+              name={showPassword ? "visibility-off" : "visibility"} 
+              size={24} 
+              color="#6C757D" 
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Botão de Login */}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Entrar</Text>
+          )}
+        </TouchableOpacity>
+        {/* Esqueci minha senha */}
+        <TouchableOpacity
+          style={styles.forgotPassword}
+          onPress={() => navigation.navigate("Forgot")}
+        >
+          <Text style={styles.forgotPasswordText}>Esqueceu sua senha? Recuperar</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: 'white'
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
-  stretch: {
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: 250,
-    resizeMode: 'cover',
+  logo: {
+    width: 140,
+    height: 140,
+    marginBottom: 20,
   },
-  textDecoration: {
-    marginBottom: 16,
+  logoText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#003366",
+    marginBottom: 20,
+    textAlign: "center",
   },
-  buttonDecoration: {
-    marginBottom: 16,
+  formContainer: {
+    width: "100%",
+    maxWidth: 400,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#CED4DA",
     borderRadius: 8,
-    backgroundColor: '#1f2937',
+    height: 50,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: "#495057",
+    marginBottom: 15,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#CED4DA",
+    borderRadius: 8,
+    height: 50,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+  },
+  inputPassword: {
+    flex: 1,
+    fontSize: 16,
+    color: "#495057",
+  },
+  button: {
+    backgroundColor: "#BCE08F",
+    height: 50,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  forgotPassword: {
+    marginTop: 15,
+  },
+  forgotPasswordText: {
+    color: "#007BFF",
+    textAlign: "center",
+    fontSize: 14,
   },
 });
 
-export default Login
+export default Login;

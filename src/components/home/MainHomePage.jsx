@@ -4,10 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { MotiView, ScrollView } from 'moti';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
-const MainHomePage = () => {
+const MainHomePage = ({user}) => {
   const navigation = useNavigation();
-  
+  const list = useSelector((state) => state.dataset?.list)
+  console.log(list)
   const formatDate = (date) => {
     return moment(date).locale('pt-br').format('ddd DD MMM • HH:mm');
   };
@@ -25,26 +27,6 @@ const MainHomePage = () => {
     }
   };
 
-  const appointments = [
-    {
-      id: 1,
-      name: 'Jardel Osorio Duarte',
-      photo: 'https://randomuser.me/api/portraits/men/3.jpg',
-      procedure: 'Exame de Cavitação',
-      date: '2025-01-12T10:15:00',
-      status: 'pendente',    
-    },
-    {
-      id: 2,
-      name: 'Jardel Osorio Duarte',
-      photo: 'https://randomuser.me/api/portraits/men/3.jpg',
-      procedure: 'Radiografia para ATM',
-      date: '2025-01-12T10:15:00',
-      obs: 'Tomografia do dente 45',
-      status: 'pendente',
-    }
-  ];
-
   const navigateToScreen = (appointment) => {
 		navigation.navigate('Resume', { appointment: appointment });
   };
@@ -61,8 +43,19 @@ const MainHomePage = () => {
       }}
     >
       <View style={styles.firstArea}>
-        <Text style={styles.topTitle}>Meus Exames</Text>
-        { appointments &&
+        {
+          user.userType === 'admin' &&
+          <Text style={styles.topTitle}>Últimos lançamentos</Text>
+        }
+        {
+          user.userType === 'dentist' &&
+          <Text style={styles.topTitle}>Últimas solicitações</Text>
+        }
+        {
+          user.userType === 'pacient' &&
+          <Text style={styles.topTitle}>Meus Exames</Text>
+        }
+        {list &&
           <Text style={styles.linkData} onPress={() => navigation.navigate('List')}>
           Ver Todos
           </Text>
@@ -70,10 +63,9 @@ const MainHomePage = () => {
        
       </View>
 			<ScrollView>
-      {
-      appointments !== null ? 
-        appointments.map((appointment) => (
-        <View key={appointment.id} style={styles.secondArea}>
+      {list !== null ? 
+        list.map((appointment) => (
+        <View key={appointment._id} style={styles.secondArea}>
           <View style={{ flexDirection: 'row', marginBottom: 10 }}>
             <Ionicons
               style={styles.iconDecoration}
@@ -81,19 +73,19 @@ const MainHomePage = () => {
               color="#ababab"
               size={25}
             />
-            <Text style={styles.dataText}>{formatDate(appointment.date)}</Text>
+            <Text style={styles.dataText}>{formatDate(appointment?.createdAt)}</Text>
           </View>
           <View style={styles.gridContainer}>
-            <Image style={styles.avatar} source={{ uri: appointment.photo }} />
+            <Image style={styles.avatar} source={{ uri: appointment?.pacientImg ? appointment?.pacientImg : "https://digital1-clinica2-radio4-odontologico8-s3cloud32.s3.sa-east-1.amazonaws.com/files/avatar/1734352856296-default_user-whitebg.png" }} />
             <View style={styles.dataColumnText}>
-              <Text style={styles.responseName}>{appointment.name}</Text>
-              <Text style={styles.dataColumnType}>{appointment.procedure}</Text>
+              <Text style={styles.responseName}>{appointment?.pacientName}</Text>
+              <Text style={styles.dataColumnType}>{appointment?.dataType}</Text>
               <TouchableOpacity
                 onPress={() => navigateToScreen(appointment)}
-                style={[styles.dataColumnBtn, { backgroundColor: `${getStatusColor(appointment.status)}` }]}
+                style={[styles.dataColumnBtn, { backgroundColor: `${getStatusColor(appointment?.status)}` }]}
                 
               >
-                <Text style={{ color: 'white' }}>{appointment.status}</Text>
+                <Text style={{ color: 'white' }}>{appointment?.status}</Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -188,7 +180,7 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		borderRadius: 50,
-		backgroundColor: '#bce08f',
+		backgroundColor: '#ececec',
 		marginLeft: 5,
 		marginTop: 40,
 	},

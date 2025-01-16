@@ -41,16 +41,20 @@ const Resume = () => {
         <Text style={styles.headerTitle}>Detalhes do Exame</Text>
       </View>
       <View style={styles.content}>
-        <Image style={styles.avatar} source={{ uri: appointment.photo }} />
-        <Text style={styles.doctorName}>{appointment.name}</Text>
-        <Text style={styles.examType}>{appointment.procedure}</Text>
-        <Text style={styles.date}>{formatDate(appointment.date)}</Text>
-        
+        <Image style={styles.avatar} source={{ uri: appointment.pacientImg }} />
+        <Text style={styles.doctorName}>{appointment.pacientName}</Text>
+        <Text style={styles.examType}>{appointment.dataType}</Text>
+        <Text style={styles.date}>{formatDate(appointment.createdAt)}</Text>
         <View style={[styles.statusContainer, { backgroundColor: `${getStatusColor(appointment.status)}` }]}
         >
           {
             appointment.status === 'finalizado' ?
-              <Text style={styles.status} onPress={navigation.navigate('Preview')}>Visualizar</Text>
+              <Text 
+                style={styles.status} 
+                onPress={() => navigation.navigate('Preview', { appointment: appointment })}
+              >
+                Visualizar
+              </Text>
             :
               <Text style={styles.status}>{appointment.status}</Text>
 
@@ -93,6 +97,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
+    backgroundColor: '#ececec',
     borderRadius: 50,
     marginBottom: 20,
     marginTop: 50

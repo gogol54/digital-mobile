@@ -4,11 +4,13 @@ import { Audiowide_400Regular } from '@expo-google-fonts/audiowide'
 import { Image, SafeAreaView, StyleSheet, View, Text } from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import { MotiView } from 'moti'
+import moment from 'moment'
 
 // Previne o auto-hide do Splash Screen
 SplashScreen.preventAutoHideAsync();
 
-const HeaderHomePage = () => {
+const HeaderHomePage = ({user}) => {
+	console.log(user)
 	const [fontsLoaded] = useFonts({
 		Audiowide_400Regular,
 	});
@@ -23,6 +25,11 @@ const HeaderHomePage = () => {
 	if (!fontsLoaded) {
 		return null; // Enquanto carrega, mantém o Splash visível
 	}
+
+	const formatDate = (date) => {
+		return moment(date).locale('pt-br').format('DD/MM/YYYY');
+	};
+		
 
   return (
 		<View  
@@ -46,10 +53,10 @@ const HeaderHomePage = () => {
 					/>
 				</SafeAreaView>
 				<SafeAreaView style={styles.boxAreaBottom}>
-					<Text style={styles.textName}>JARDEL OSORIO DUARTE</Text>
+					<Text style={styles.textName}>{user?.name}</Text>
 					<View>
 						<Text style={styles.since}>Cadastro:</Text>
-						<Text style={styles.stampDate}>01/06/2025</Text>
+						<Text style={styles.stampDate}>{formatDate(user?.createdAt)}</Text>
 					</View>
 				</SafeAreaView>
 			</MotiView>

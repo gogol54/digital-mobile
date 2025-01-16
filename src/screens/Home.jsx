@@ -1,13 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import HeaderHomePage from '../components/home/HeaderHomePage'
 import MainHomePage from '../components/home/MainHomePage'
 import BottomBar from '../components/BottomBar'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUsersList } from '../lib/actions/userRequest'
+import { listOfFiles, getStatus } from '../lib/actions/requestData'
+
 const Home = () => {
+  const user = useSelector((state) => state.user?.currentUser)
+  const [isReady, setIsReady] = useState(false)
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+    if (user && user.token) {
+      setIsReady(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (isReady) {
+      if (user.userType !== 'pacient') {
+        getUsersList(dispatch, user)
+        getStatus(dispatch, user)
+      }
+      listOfFiles(dispatch, user)
+    }
+  }, [isReady, user, dispatch])
+
   return (
     <View style={styles.container}>
-      <HeaderHomePage />
-      <MainHomePage />
+      <HeaderHomePage user={user}/>
+      <MainHomePage user={user}/>
       <BottomBar />
     </View>
   );

@@ -9,23 +9,17 @@ import {
   Modal 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-
-const images = [
-  { imageUrl: 'https://img.freepik.com/fotos-premium/uma-foto-de-uma-mandibula-com-um-dente-implantado_386912-139.jpg?w=900' },
-  { imageUrl: 'https://img.freepik.com/fotos-premium/radiografia-panoramica-de-raios-x-de-dentes-dentarios-para-o-conceito-de-pesquisa-de-estruturas-dentarias_275029-1484.jpg?w=826' },
-  { imageUrl: 'https://img.freepik.com/fotos-premium/imagem-digital-de-radiografia-dentaria-panoramica-da-mandibula-superior-e-inferior-radiografia-da-maxila-e-da-mandibula-tomografia-de-plano-focal_275029-3068.jpg?w=1380' },
-  { imageUrl: 'https://img.freepik.com/fotos-premium/imagem-digital-de-radiografia-dentaria-panoramica-da-mandibula-superior-e-inferior-radiografia-da-maxila-e-da-mandibula-tomografia-de-plano-focal_275029-3065.jpg?w=1380' },
-  { imageUrl: 'https://img.freepik.com/fotos-premium/raio-x-da-mandibula-superior-e-inferior-da-crianca-com-dentes-em-crescimento-claramente-visiveis_254257-1511.jpg' },
-];
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Preview = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigation = useNavigation();
-
+  const route = useRoute();
+  const { appointment } = route.params;
+ 
   const openImage = (index) => {
-    setSelectedImage(images[index]);  // Usando o índice diretamente
+    setSelectedImage(appointment?.files[index]);  // Usando o índice diretamente
     setModalVisible(true);
   };
 
@@ -40,10 +34,10 @@ const Preview = () => {
 
       {/* Grid */}
       <FlatList
-        data={images}
+        data={appointment?.files}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.card} onPress={() => openImage(index)}>
-            <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
+            <Image source={{ uri: item }} style={styles.cardImage} />
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()} // Usando index como chave única
@@ -62,7 +56,7 @@ const Preview = () => {
           <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(false)}>
             <Text style={styles.modalCloseText}>Fechar</Text>
           </TouchableOpacity>
-          <Image source={{ uri: selectedImage?.imageUrl }} style={styles.modalImage} />
+          <Image source={{ uri: selectedImage }} style={styles.modalImage} />
         </View>
       </Modal>
     </View>

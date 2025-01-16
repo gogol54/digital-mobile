@@ -17,30 +17,35 @@ const OccupationInfo = () => {
             color="#1f2937"
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Ocupação profissional</Text>
-        <Ionicons
-          style={styles.iconHeader} 
-          name='pencil-outline' 
-          size={25} 
-          color={'#1f2937'}
-        />
+        <Text style={styles.headerTitle}>Ocupação Profissional</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('UserUpdate', { flag: 'occupation'})}>
+          <Ionicons
+            style={styles.iconHeader} 
+            name='pencil-outline' 
+            size={25} 
+            color={'#1f2937'}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.wrapper}>
         <View style={{padding: 10}}>
-          <Text style={{color: '#898989', fontSize: 16}}>Nome Completo</Text>
-          <Text style={{color: '#1f2937', fontSize: 18}}>Jardel Osorio Duarte</Text>
+          <Text style={styles.textTitle}>
+            Local de Trabalho
+          </Text>
+          <Text style={styles.textContent}>
+            Centro de Radiologia Odontologica Digital 
+          </Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', padding: 10, marginRight: 20}}>
-          <View >
-            <Text style={{color: '#898989', fontSize: 14}}>Data de Nascimento</Text>
-            <Text style={{color: '#1f2937', fontSize: 16}}>23/11/2002</Text>
+        <View style={styles.viewArea}>
+          <View style={styles.viewAreaLeft}>
+            <Text style={styles.textTitle}>Cargo</Text>
+            <Text style={styles.textContent}>Técnico de Informática</Text>
           </View> 
-          <View>
-            <Text style={{color: '#898989', fontSize: 14}}>Idade</Text>
-            <Text style={{color: '#1f2937', fontSize: 16}}>23</Text>
+          <View style={styles.viewAreaRight}>
+            <Text style={styles.textTitleRight}>CRO</Text>
+            <Text style={styles.textContentRight}>14552</Text>
           </View>
         </View>
-     
       </View>
       {/* Adicione aqui os dados de informações pessoais */}
     </View>
@@ -72,17 +77,47 @@ const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     alignSelf: 'center',
-    width: '90%',
-    height: 'autos',
+    width: '100%',
+    height: 'auto',
     borderRadius: 20,
     backgroundColor: '#f8f8fb'
-  },
-  infoContainer: {
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  viewArea: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    margin: 10,
+    padding: 10, 
+  },
+  viewAreaLeft: {
+    flexDirection: 'column', 
+    justifyContent: 'space-between', 
+  },
+  viewAreaRight: {
+    textAlign: 'right'
+  },
+  textTitle: {
+    color: '#898989', 
+    fontSize: 13,
+  },
+  textTitleRight: { 
+    color: '#898989', 
+    fontSize: 13,
+    textAlign: 'right'
+  },
+  textContent: {
+    color: '#1f2937',
+    fontSize: 14,
+    maxWidth: 270,
+  },
+  textContentRight: {
+    color: '#1f2937',
+    fontSize: 14,
+    textAlign: 'right'
   },
 });
 

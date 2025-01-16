@@ -2,15 +2,31 @@ import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { showToast } from '../../lib/functions/showToast'
+import { logOut } from '../../lib/redux/userRedux'
+import { clearData } from '../../lib/redux/dataRedux'
+import { useDispatch } from 'react-redux'
 
 const MenuBar = () => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    showToast('success', 'Esperamos vê-lo novamente em breve!')
+    setTimeout(() => {
+      dispatch(clearData())
+      dispatch(logOut())
+    }, 500)
+    setTimeout(() => {
+      navigation.navigate('Login')
+    }, 1000);
+  }
 
   return (
     <View style={styles.container}>
       <View>
         <TouchableOpacity 
-          onPress={() => navigation.navigate('UserProfile', { flag: 'person' })}
+          onPress={() => navigation.navigate('UserProfile', { flag: 'personal' })}
           style={styles.boxContent}
         >
           <View>
@@ -66,6 +82,7 @@ const MenuBar = () => {
         </TouchableOpacity>
         <View style={styles.hr} />
       </View>
+
       <View>
         <TouchableOpacity
           style={styles.boxContent}
@@ -83,6 +100,37 @@ const MenuBar = () => {
           <View>
             <Text style={styles.title}>Informações Clínicas</Text>
             <Text style={styles.infoType}>Acesse seus exames Finalizados</Text>
+          </View>
+          <View>
+            <Ionicons
+                name="chevron-forward-outline"
+                color="#9898"
+                size={25}
+                style={styles.arrowIcon}
+              />
+          </View>
+        </TouchableOpacity>
+        <View style={styles.hr} />
+      </View>
+
+
+      <View>
+        <TouchableOpacity
+          style={styles.boxContent}
+          onPress={() => handleLogout()}
+        >
+          <View>
+            <Ionicons
+                name="log-out-outline"
+                // color='#1f2937'
+                color="#1f2937" 
+                size={30}
+                style={styles.userIcon}
+              />
+          </View>
+          <View>
+            <Text style={styles.title}>Sair</Text>
+            <Text style={styles.infoType}>Desconecte-se com segurança</Text>
           </View>
           <View>
             <Ionicons
@@ -145,6 +193,3 @@ const styles = StyleSheet.create({
   },
 })
 export default MenuBar
-
-// Montserrat_400Regular, 
-// Montserrat_500Medium, 
