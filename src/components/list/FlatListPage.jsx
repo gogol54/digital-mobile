@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { 
   View, 
   Text, 
@@ -8,12 +8,13 @@ import {
   Image, 
   SafeAreaView,
   RefreshControl,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import moment from 'moment';
-import 'moment/locale/pt-br';
-import NavigationModal from './NavigationModal';
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import moment from 'moment'
+import 'moment/locale/pt-br'
+import NavigationModal from './NavigationModal'
+import { useSelector } from 'react-redux'
 
 const patients = [
   {
@@ -64,12 +65,13 @@ const FlatListPage = () => {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const modalRef = React.useRef(null); // Ref do Modalize
+  const list = useSelector((state) => state.dataset?.list)
 
   const getFilteredPatients = () =>
-    patients.filter((patient) =>
+    list.filter((item) =>
       selected === 'finalizados'
-        ? ['finalizado', 'cancelado'].includes(patient.status)
-        : patient.status === 'pendente'
+        ? ['finalizado', 'cancelado'].includes(item.status)
+        : item.status === 'pendente'
   );
 
   const onRefresh = () => {
@@ -129,10 +131,10 @@ const FlatListPage = () => {
           </View>
           <View style={styles.divider} />
           <View style={styles.textContainer}>
-            <Image source={{ uri: item.photo }} style={styles.photo} />
+            <Image source={{ uri: item?.pacientImg }} style={styles.photo} />
             <View>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.procedure}>{item.procedure}</Text>
+              <Text style={styles.name}>{item?.pacientName}</Text>
+              <Text style={styles.procedure}>{item?.dataType}</Text>
             </View>
           </View>
         </View>
@@ -163,7 +165,7 @@ const FlatListPage = () => {
       <FlatList
         data={getFilteredPatients()}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         style={{ flex: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -255,6 +257,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 20,
+    backgroundColor: '#ececec'
   },
   textContainer: {
     flexDirection: 'row',

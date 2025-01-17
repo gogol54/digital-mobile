@@ -7,13 +7,18 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { 
+  useRoute, 
+  useNavigation 
+} from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const Resume = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const user = useSelector((state) => state.user?.currentUser)
   const { appointment } = route.params;
   const formatDate = (date) => {
     return moment(date).locale('pt-br').format('ddd DD MMM • HH:mm');
@@ -62,12 +67,15 @@ const Resume = () => {
         </View>
         <Text style={styles.detailsTitle}>Detalhes</Text>
         <Text style={styles.details}>{appointment?.obs || 'Nenhuma observação inclusa'}</Text>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => console.log("Agendar nova consulta")}
-        >
-          <Text style={styles.buttonText}>Agendar Nova Consulta</Text>
-        </TouchableOpacity>
+        { 
+        user.userType !== 'pacient' && 
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('Request')}
+          >
+            <Text style={styles.buttonText}>Agendar Nova Consulta</Text>
+          </TouchableOpacity> 
+        }
       </View>
     </ScrollView>
   );

@@ -21,7 +21,7 @@ import {
 } from "../redux/dataRedux"
 import { showToast } from "../functions/showToast";
 
-export const createRequestExame = async (dispatch, payload, router, user) => {
+export const createRequestExame = async (dispatch, payload, navigation, user) => {
   dispatch(addFileStart())
   try {
     const response = await publicRequest.post('/file/create', payload, {
@@ -31,7 +31,7 @@ export const createRequestExame = async (dispatch, payload, router, user) => {
       console.log(response.data.newFile)
       dispatch(addFileSuccess(payload))
       showToast('success', 'Solicitação gerada com sucesso!')
-      router.push('/lista') 
+      navigation.navigate('List') 
     }
   } catch (error) {
     showToast('error', error.message)

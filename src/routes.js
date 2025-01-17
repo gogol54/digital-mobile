@@ -11,7 +11,7 @@ import Resume from './screens/Resume';
 import Preview from './screens/Preview';
 import UserProfile from './screens/UserProfile';
 import UserUpdate from './screens/UserUpdate';
-import OTPLogin from './screens/Otp';
+import Request from './screens/Request';
 
 const Stack = createNativeStackNavigator();
 
@@ -69,13 +69,17 @@ export default function Routes() {
               component={Preview}
               options={{ headerShown: false }}
             />
+             <Stack.Screen
+              name="Request"
+              component={Request}
+              options={{ headerShown: true, title: 'Solicitação de Exame' }}
+            />
           </Stack.Group>
         ) : (
           // Telas para usuários não autenticados
           <Stack.Group screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Forgot" component={Forgot} options={{ title: "Voltar" }} />
-            <Stack.Screen name="OTPLogin" component={OTPLogin} />
           </Stack.Group>
         )}       
       </Stack.Navigator>

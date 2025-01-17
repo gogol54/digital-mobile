@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, VirtualizedList } from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  Image, 
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { MotiView, ScrollView } from 'moti';
@@ -32,91 +38,91 @@ const MainHomePage = ({user}) => {
   };
 
   return (
-    <MotiView
-      style={styles.boxList}
-      from={{ translateX: -300 }}
-      animate={{ translateX: 0 }}
-      transition={{
-        type: 'timing',
-        duration: 500,
-        delay: 200,
-      }}
-    >
+    <View style={styles.boxList}>
       <View style={styles.firstArea}>
-        {
-          user.userType === 'admin' &&
-          <Text style={styles.topTitle}>Últimos lançamentos</Text>
+        { user.userType !== 'patient' &&
+          <TouchableOpacity onPress={() => navigation.navigate('Request')}>
+            <Text style={styles.linkData}>
+              Gerar solicitação
+            </Text>
+          </TouchableOpacity>
         }
+        {list &&
+          <TouchableOpacity onPress={() => navigation.navigate('List')}>
+            <Text style={styles.linkData}>
+              Ver Todos
+            </Text>
+          </TouchableOpacity>
+        }
+       
+      </View>
+      <View>
         {
-          user.userType === 'dentist' &&
-          <Text style={styles.topTitle}>Últimas solicitações</Text>
+          user.userType !== 'patient' &&
+          <Text style={styles.topTitle}>Últimos solicitações</Text>
         }
         {
           user.userType === 'pacient' &&
           <Text style={styles.topTitle}>Meus Exames</Text>
         }
-        {list &&
-          <Text style={styles.linkData} onPress={() => navigation.navigate('List')}>
-          Ver Todos
-          </Text>
-        }
-       
       </View>
-			<ScrollView>
-      {list !== null ? 
-        list.map((appointment) => (
-        <View key={appointment._id} style={styles.secondArea}>
-          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-            <Ionicons
-              style={styles.iconDecoration}
-              name="time-outline"
-              color="#ababab"
-              size={25}
-            />
-            <Text style={styles.dataText}>{formatDate(appointment?.createdAt)}</Text>
-          </View>
-          <View style={styles.gridContainer}>
-            <Image style={styles.avatar} source={{ uri: appointment?.pacientImg ? appointment?.pacientImg : "https://digital1-clinica2-radio4-odontologico8-s3cloud32.s3.sa-east-1.amazonaws.com/files/avatar/1734352856296-default_user-whitebg.png" }} />
-            <View style={styles.dataColumnText}>
-              <Text style={styles.responseName}>{appointment?.pacientName}</Text>
-              <Text style={styles.dataColumnType}>{appointment?.dataType}</Text>
-              <TouchableOpacity
-                onPress={() => navigateToScreen(appointment)}
-                style={[styles.dataColumnBtn, { backgroundColor: `${getStatusColor(appointment?.status)}` }]}
-                
-              >
-                <Text style={{ color: 'white' }}>{appointment?.status}</Text>
-              </TouchableOpacity>
+      <ScrollView>
+        {list && list.length > 0 ? 
+          list.slice(-3).map((appointment) => ( // Pegando os últimos 3 itens
+            <View key={appointment._id} style={styles.secondArea}>
+              <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                <Ionicons
+                  style={styles.iconDecoration}
+                  name="time-outline"
+                  color="#ababab"
+                  size={25}
+                />
+                <Text style={styles.dataText}>{formatDate(appointment?.createdAt)}</Text>
+              </View>
+              <View style={styles.gridContainer}>
+                <Image 
+                  style={styles.avatar} 
+                  source={{ uri: appointment?.pacientImg ? appointment?.pacientImg : "https://digital1-clinica2-radio4-odontologico8-s3cloud32.s3.sa-east-1.amazonaws.com/files/avatar/1734352856296-default_user-whitebg.png" }} 
+                />
+                <View style={styles.dataColumnText}>
+                  <Text style={styles.responseName}>{appointment?.pacientName}</Text>
+                  <Text style={styles.dataColumnType}>{appointment?.dataType}</Text>
+                  <TouchableOpacity
+                    onPress={() => navigateToScreen(appointment)}
+                    style={[styles.dataColumnBtn, { backgroundColor: `${getStatusColor(appointment?.status)}` }]}
+                  >
+                    <Text style={{ color: 'white' }}>{appointment?.status}</Text>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigateToScreen(appointment)}
+                  style={{ marginTop: 40 }}
+                >
+                  <Ionicons
+                    name="chevron-forward-outline"
+                    color="#9898"
+                    size={25}
+                    style={styles.arrowRight}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <TouchableOpacity
-              onPress={() => navigateToScreen(appointment)}
-              style={{ marginTop: 40 }}
-            >
-              <Ionicons
-                name="chevron-forward-outline"
-                color="#9898"
-                size={25}
-                style={styles.arrowRight}
+          ))
+          :
+          (
+            <View>
+              <Image
+                source={require('../../../assets/icon_info.png')} 
+                style={styles.nullBoxImage} 
               />
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))
-    :
-      (
-        <View>
-          <Image
-            source={require('../../../assets/icon_info.png')} 
-            style={styles.nullBoxImage} 
-          />
-            <Text 
-              style={styles.nullBoxText} 
-            > Você não tem exames agendados</Text>
-        </View>
-      )
-    }
-			</ScrollView>
-    </MotiView>
+              <Text 
+                style={styles.nullBoxText} 
+              > Você não tem exames agendados</Text>
+            </View>
+          )
+        }
+      </ScrollView>
+    </View>
   );
 };
 
@@ -147,6 +153,7 @@ const styles = StyleSheet.create({
 	},
 	topTitle: {
 		marginTop: 30,
+    marginBottom: 10,
 		fontSize: 16,
 		color: '#1f2937',
 		fontFamily: 'Montserrat_700Bold',

@@ -1,3 +1,4 @@
+import { MotiView } from 'moti'
 import React from 'react'
 import { 
   View, 
@@ -11,7 +12,16 @@ const TopProfilePage = () => {
   return (
     <View>
       <Text style={styles.title}>Configurações de Perfil</Text>
-      <View style={styles.boxArea}>
+      <MotiView
+        style={styles.boxArea}
+        from={{ translateX: -300 }}
+        animate={{ translateX: 0 }}
+        transition={{
+          type: 'timing',
+          duration: 500,
+          delay: 200,
+        }} 
+      >
         <SafeAreaView style={{flexDirection: 'row'}}>
           <Image 
             style={styles.avatar} 
@@ -22,7 +32,7 @@ const TopProfilePage = () => {
             <Text style={styles.textAreaMail}>mbelo@gmail.com</Text>
           </View>
         </SafeAreaView>
-      </View>
+      </MotiView>
     </View>
   )
 }
