@@ -12,28 +12,21 @@ import {
   Modal
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadFileToS3 } from '../../../lib/functions/s3Utils'
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserData } from '../../../lib/actions/userRequest';
 
 const UpdatePersonalData = () => {
   const navigation = useNavigation();
+  const route = useRoute()
+  const user = useSelector((state) => state.user?.currentUser)
+  const dispatch = useDispatch()
+  
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: 'Jardel Osorio Duarte',
-    birthDate: '23/11/2002',
-    phone: '(55) 981180042',
-    email: 'jardeleko@outlook.com',
-    age: '23',
-    gender: 'Homem',
-    cpf: '028.376.080-09',
-    cep: '97590-000',
-    address: 'R. João Brasil, 2085',
-    city: 'Rosario do Sul',
-    state: 'RS',
-    imageUri: null, // Campo de imagem
-  });
+  const [formData, setFormData] = useState(user);
 
   const [modalVisible, setModalVisible] = useState(false); // Controle do Modal
 
@@ -42,7 +35,7 @@ const UpdatePersonalData = () => {
   };
 
   const handleSave = () => {
-    console.log('Dados atualizados:', formData);
+    updateUserData(dispatch, user._id, formData, user)
     navigation.goBack();
   };
 
@@ -104,8 +97,8 @@ const UpdatePersonalData = () => {
       <View style={styles.form}>
         <InputField
           label="Nome Completo"
-          value={formData.fullName}
-          onChangeText={(value) => handleInputChange('fullName', value)}
+          value={formData.name}
+          onChangeText={(value) => handleInputChange('name', value)}
         />
         <InputField
           label="Data de Nascimento"
@@ -140,26 +133,26 @@ const UpdatePersonalData = () => {
         />
         <InputField
           label="CEP"
-          value={formData.cep}
-          onChangeText={(value) => handleInputChange('cep', value)}
+          value={formData?.address?.cep}
+          onChangeText={(value) => handleInputChange('address.cep', value)}
         />
         <InputField
           label="Endereço"
-          value={formData.address}
-          onChangeText={(value) => handleInputChange('address', value)}
+          value={formData?.address?.endereco}
+          onChangeText={(value) => handleInputChange('address.endereco', value)}
         />
         <InputField
           label="Cidade"
-          value={formData.city}
-          onChangeText={(value) => handleInputChange('city', value)}
+          value={formData?.address?.cidade}
+          onChangeText={(value) => handleInputChange('address.cidade', value)}
         />
         <InputField
           label="Estado"
-          value={formData.state}
-          onChangeText={(value) => handleInputChange('state', value)}
+          value={formData?.address?.estado}
+          onChangeText={(value) => handleInputChange('address.estado', value)}
         />
         <View style={styles.imageContainer}>
-          {formData.imageUri ? (
+          {formData?.img ? (
             <View>
               <Text style={styles.label && {textAlign: 'center'}}>Imagem de Perfil</Text>
               <TouchableOpacity
@@ -284,6 +277,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginBottom: 15,
+    objectFit: 'cover'
   },
   imagePreview: {
     marginTop: 10,

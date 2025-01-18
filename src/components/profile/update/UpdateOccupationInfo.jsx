@@ -9,14 +9,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserData } from '../../../lib/actions/userRequest';
 
 const UpdateOccupationInfo = () => {
   const navigation = useNavigation();
-  const [formData, setFormData] = useState({
-    workplace: 'Centro de Radiologia Odontologica Digital',
-    position: 'Técnico de Informática',
-    cro: '14552',
-  });
+  const user = useSelector((state) => state.user?.currentUser)
+  const dispatch = useDispatch()
+  
+  const [formData, setFormData] = useState(user);
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -24,7 +25,7 @@ const UpdateOccupationInfo = () => {
 
   const handleSave = () => {
     // Aqui você pode enviar os dados atualizados para o backend
-    console.log('Dados de Ocupação atualizados:', formData);
+    updateUserData(dispatch, user._id, formData, user)
     navigation.goBack(); // Voltar para a página anterior
   };
 
@@ -39,18 +40,18 @@ const UpdateOccupationInfo = () => {
       <View style={styles.form}>
         <InputField
           label="Local de Trabalho"
-          value={formData.workplace}
-          onChangeText={(value) => handleInputChange('workplace', value)}
+          value={formData.company}
+          onChangeText={(value) => handleInputChange('company', value)}
         />
         <InputField
           label="Cargo"
-          value={formData.position}
-          onChangeText={(value) => handleInputChange('position', value)}
+          value={formData.occupation}
+          onChangeText={(value) => handleInputChange('occupation', value)}
         />
         <InputField
           label="CRO"
-          value={formData.cro}
-          onChangeText={(value) => handleInputChange('cro', value)}
+          value={formData.code}
+          onChangeText={(value) => handleInputChange('code', value)}
           keyboardType="numeric"
         />
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>

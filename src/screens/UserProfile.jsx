@@ -5,15 +5,14 @@ import PersonalInfo from '../components/profile/PersonalInfo';
 
 const UserProfile = ({ route }) => {
   const { flag } = route.params;  
-
   return (
     <View style={styles.container}>
       {
         flag === 'personal' 
         ? 
-          <PersonalInfo /> 
+          <PersonalInfo/> 
         : 
-          <OccupationInfo />
+          <OccupationInfo/>
       }
     </View>
   );

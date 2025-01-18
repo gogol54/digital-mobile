@@ -3,9 +3,12 @@ import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 const OccupationInfo = () => {
   const navigation = useNavigation()
+  const user = useSelector((state) => state.user?.currentUser)
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -33,17 +36,17 @@ const OccupationInfo = () => {
             Local de Trabalho
           </Text>
           <Text style={styles.textContent}>
-            Centro de Radiologia Odontologica Digital 
+            {user?.company || 'Não preenchido'} 
           </Text>
         </View>
         <View style={styles.viewArea}>
           <View style={styles.viewAreaLeft}>
             <Text style={styles.textTitle}>Cargo</Text>
-            <Text style={styles.textContent}>Técnico de Informática</Text>
+            <Text style={styles.textContent}>{user?.occupation || 'Não preenchido'} </Text>
           </View> 
           <View style={styles.viewAreaRight}>
             <Text style={styles.textTitleRight}>CRO</Text>
-            <Text style={styles.textContentRight}>14552</Text>
+            <Text style={styles.textContentRight}>{user?.code || 'Não possui'} </Text>
           </View>
         </View>
       </View>

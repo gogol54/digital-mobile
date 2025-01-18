@@ -7,8 +7,11 @@ import {
   Image, 
   StyleSheet,
 } from 'react-native'
+import { useSelector } from 'react-redux'
 
 const TopProfilePage = () => {
+  const user = useSelector((state) => state.user?.currentUser)
+  
   return (
     <View>
       <Text style={styles.title}>Configurações de Perfil</Text>
@@ -25,11 +28,11 @@ const TopProfilePage = () => {
         <SafeAreaView style={{flexDirection: 'row'}}>
           <Image 
             style={styles.avatar} 
-            source={{ uri: 'https://randomuser.me/api/portraits/men/3.jpg' }} 
+            source={{ uri: user?.img }} 
           />
           <View style={styles.textArea}>
-            <Text style={styles.textAreaName}>Maria Belo</Text>
-            <Text style={styles.textAreaMail}>mbelo@gmail.com</Text>
+            <Text style={styles.textAreaName}>{user?.name || null}</Text>
+            <Text style={styles.textAreaMail}>{user?.email || null}</Text>
           </View>
         </SafeAreaView>
       </MotiView>
@@ -60,11 +63,27 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     objectFit: 'cover',
-    borderRadius: 50
+    borderRadius: 50,
+    backgroundColor: '#ececec'
   },
-  textArea: { marginTop: 30, alignSelf: 'center'},
-  textAreaName: {color: '#fff', fontSize: 16, alignItems: 'center', textAlign: 'justify', marginLeft: 20},
-  textAreaMail: {color: '#898989', textAlign: 'justify', fontSize: 16, marginLeft: 20},
+  textArea: {
+    marginTop: 30, 
+    alignSelf: 'center'
+  },
+  textAreaName: {
+    color: '#fff', 
+    fontSize: 15, 
+    alignItems: 'center', 
+    textAlign: 'justify', 
+    marginLeft: 20
+  },
+  textAreaMail: {
+    color: '#c9c9c9', 
+    textAlign: 'justify', 
+    fontSize: 13,
+    maxWidth: '92%', 
+    marginLeft: 20
+  },
 
 })
 export default TopProfilePage
