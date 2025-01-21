@@ -14,59 +14,22 @@ import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import NavigationModal from './NavigationModal'
-import { useSelector } from 'react-redux'
-
-const patients = [
-  {
-    id: '1',
-    name: 'Carlos Almeida',
-    photo: 'https://randomuser.me/api/portraits/men/1.jpg',
-    procedure: 'Raios-X Dentário',
-    date: '2025-01-08T08:00:00',
-    status: 'finalizado',
-  },
-  {
-    id: '2',
-    name: 'Ana Souza',
-    photo: 'https://randomuser.me/api/portraits/women/1.jpg',
-    procedure: 'Tomografia Computadorizada',
-    date: '2025-01-09T14:00:00',
-    status: 'cancelado',
-  },
-  {
-    id: '3',
-    name: 'Felipe Costa',
-    photo: 'https://randomuser.me/api/portraits/men/2.jpg',
-    procedure: 'Radiografia Panorâmica',
-    date: '2025-01-10T09:30:00',
-    status: 'pendente',
-  },
-  {
-    id: '4',
-    name: 'Juliana Lima',
-    photo: 'https://randomuser.me/api/portraits/women/2.jpg',
-    procedure: 'Radiografia Periapical',
-    date: '2025-01-11T16:00:00',
-    status: 'finalizado',
-  },
-  {
-    id: '5',
-    name: 'Marcelo Pereira',
-    photo: 'https://randomuser.me/api/portraits/men/3.jpg',
-    procedure: 'Exame de Cavitação',
-    date: '2025-01-12T10:15:00',
-    status: 'pendente',
-  },
-];
+import { 
+  useDispatch, 
+  useSelector 
+} from 'react-redux'
+import { listOfFiles } from '../../lib/actions/requestData'
 
 const FlatListPage = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selected, setSelected] = useState('finalizados');
-  const [refreshing, setRefreshing] = useState(false);
-  const navigation = useNavigation();
-  const modalRef = React.useRef(null); // Ref do Modalize
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [selected, setSelected] = useState('finalizados')
+  const [refreshing, setRefreshing] = useState(false)
+  const navigation = useNavigation()
+  const modalRef = React.useRef(null) // Ref do Modalize
+  const user = useSelector((state)=> state.user?.currentUser)
   const list = useSelector((state) => state.dataset?.list)
-
+  const dispatch = useDispatch()
+  
   const getFilteredPatients = () =>
     list.filter((item) =>
       selected === 'finalizados'
@@ -74,11 +37,13 @@ const FlatListPage = () => {
         : item.status === 'pendente'
   );
 
+  
   const onRefresh = () => {
-    setRefreshing(true);
+    setRefreshing(true)
+    listOfFiles(dispatch, user)
     setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+      setRefreshing(false)
+    }, 2000)
   };
 
   const formatDate = (date) => {

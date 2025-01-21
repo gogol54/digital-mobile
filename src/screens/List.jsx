@@ -25,7 +25,7 @@ const List = () => {
   }, [user]);
 
   useEffect(() => {
-    if (isReady) {
+    if (user && isReady) {
       if (user.userType !== 'pacient') {
         getUsersList(dispatch, user)
         getStatus(dispatch, user)

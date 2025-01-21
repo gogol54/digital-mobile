@@ -31,7 +31,7 @@ const TopProfilePage = () => {
             source={{ uri: user?.img }} 
           />
           <View style={styles.textArea}>
-            <Text style={styles.textAreaName}>{user?.name || null}</Text>
+            <Text style={styles.textAreaName}  numberOfLines={2}>{user?.name || null}</Text>
             <Text style={styles.textAreaMail}>{user?.email || null}</Text>
           </View>
         </SafeAreaView>
@@ -68,21 +68,24 @@ const styles = StyleSheet.create({
   },
   textArea: {
     marginTop: 30, 
-    alignSelf: 'center'
+    alignSelf: 'center',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
   },
   textAreaName: {
     color: '#fff', 
-    fontSize: 15, 
-    alignItems: 'center', 
+    fontSize: 14, 
     textAlign: 'justify', 
-    marginLeft: 20
+    marginLeft: 20,
+    maxWidth: '90%'
   },
   textAreaMail: {
     color: '#c9c9c9', 
     textAlign: 'justify', 
+    flexWrap: 'wrap',
     fontSize: 13,
-    maxWidth: '92%', 
-    marginLeft: 20
+    marginLeft: 20,
+    maxWidth: '90%'
   },
 
 })

@@ -4,16 +4,21 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
-import moment from 'moment'
 
 const PersonalInfo = () => {
   const navigation = useNavigation()
   const user = useSelector((state) => state.user?.currentUser)
+
   const formatDate = (date) => {
-    return moment(date).locale('pt-br').format('DD/MM/YYYY');
+    const validDate = new Date(date);
+    if (!isNaN(validDate)) {
+      const day = validDate.getDate().toString().padStart(2, '0');
+      const month = (validDate.getMonth() + 1).toString().padStart(2, '0');
+      const year = validDate.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
   };
 
-  console.log('the user ->\n', user)
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -47,7 +52,9 @@ const PersonalInfo = () => {
         <View style={styles.viewArea}>
           <View style={styles.viewAreaLeft}>
             <Text style={styles.textTitle}>Data de Nascimento</Text>
-            <Text style={styles.textContent}>{user?.birthdate && formatDate(user?.birthdate) || 'Não preenchido'}</Text>
+            <Text style={styles.textContent}>
+              {user?.birthdate && formatDate(user.birthdate) || 'Não preenchido'}
+            </Text>
           </View> 
           <View style={styles.viewAreaRight}>
             <Text style={styles.textTitleRight}>Telefone</Text>
@@ -61,7 +68,7 @@ const PersonalInfo = () => {
           </View> 
           <View style={styles.viewAreaRight}>
             <Text style={styles.textTitleRight}>Idade</Text>
-            <Text style={styles.textContentEmail}>{user?.age || 'Não preenchido'}</Text>
+            <Text style={styles.textContent}>{user?.age || 'Não preenchido'}</Text>
           </View>
         
         </View>
@@ -82,7 +89,14 @@ const PersonalInfo = () => {
           </View> 
           <View>
             <Text style={styles.textTitleRight}>Endereço</Text>
-            <Text style={styles.textContentRight}>{user?.address?.endereco || 'Não preenchido'}</Text>
+            <Text style={styles.textContentRight}>{
+              user?.address.endereco && user?.address?.complemento ?
+                user?.address?.endereco+', '+user?.address?.complemento
+                : 
+                user.address.endereco ? 
+                user?.address?.endereco
+                :
+                'Não preenchido'}</Text>
           </View>
         </View>
         <View style={styles.viewArea}>
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
   },
   textContentEmail: {
     color: '#1f2937',
-    fontSize: 12,
+    fontSize: 13,
     maxWidth: 250,
   },
   textContentRight: {

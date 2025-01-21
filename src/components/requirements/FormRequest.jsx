@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  FlatList,
+  ActivityIndicator 
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { createRequestExame } from "../../lib/actions/requestData";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +19,7 @@ const FormRequest = () => {
   const navigation = useNavigation();
   const currentUser = useSelector((state) => state.user?.currentUser || {});
   const users = useSelector((state) => state.user?.list || []);
+  const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
 
   const [formValues, setFormValues] = useState({
     dataType: "",
@@ -19,6 +28,7 @@ const FormRequest = () => {
     createdById: "",
     pacienteNome: "",
     pacienteId: "",
+    pacientImg: "",
     cpf: "",
     pacientPhone: "",
   });
@@ -56,7 +66,9 @@ const FormRequest = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (isLoading) return; // Previne cliques enquanto o botão está em carregamento
+
     if (validate()) {
       const payload = {
         dataType: formValues.dataType,
@@ -72,10 +84,13 @@ const FormRequest = () => {
         status: "pendente",
       };
 
+      setIsLoading(true); // Ativa o estado de carregamento
       try {
-        createRequestExame(dispatch, payload, navigation, currentUser);
+        await createRequestExame(dispatch, payload, navigation, currentUser);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false); // Desativa o estado de carregamento
       }
     }
   };
@@ -126,8 +141,16 @@ const FormRequest = () => {
       />
       {errors.cpf && <Text style={styles.error}>{errors.cpf}</Text>}
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Enviar Solicitação</Text>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={() => handleSubmit()}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.submitButtonText}>Enviar Solicitação</Text>
+        )}
       </TouchableOpacity>
 
       {/* Modal para selecionar o dentista */}
@@ -187,6 +210,7 @@ const FormRequest = () => {
                     pacienteId: item._id,
                     cpf: item.cpf,
                     pacientPhone: item.phone,
+                    pacientImg: item.img,
                   });
                   setPatientModalVisible(false);
                 }}

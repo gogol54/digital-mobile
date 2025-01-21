@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
-import Home from './screens/Home';
-import Login from './screens/Login';
-import Forgot from './screens/Forgot';
-import List from './screens/List';
-import Profile from './screens/Profile';
-import Resume from './screens/Resume';
-import Preview from './screens/Preview';
-import UserProfile from './screens/UserProfile';
-import UserUpdate from './screens/UserUpdate';
-import Request from './screens/Request';
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useSelector } from 'react-redux'
+import Home from './screens/Home'
+import Login from './screens/Login'
+import Forgot from './screens/Forgot'
+import List from './screens/List'
+import Profile from './screens/Profile'
+import Resume from './screens/Resume'
+import Preview from './screens/Preview'
+import UserProfile from './screens/UserProfile'
+import UserUpdate from './screens/UserUpdate'
+import Request from './screens/Request'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 export default function Routes() {
   const currentUser = useSelector(state => state.user?.currentUser);
@@ -72,7 +72,10 @@ export default function Routes() {
              <Stack.Screen
               name="Request"
               component={Request}
-              options={{ headerShown: true, title: 'Solicitação de Exame' }}
+              options={{ 
+                headerShown: true, 
+                title: 'Solicitação de Exame' 
+              }}
             />
           </Stack.Group>
         ) : (

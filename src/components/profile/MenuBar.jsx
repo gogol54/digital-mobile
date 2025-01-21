@@ -12,16 +12,13 @@ const MenuBar = () => {
   const dispatch = useDispatch()
 
   const handleLogout = () => {
-    showToast('success', 'Esperamos vê-lo novamente em breve!')
+    showToast('success', 'Esperamos vê-lo novamente em breve!');
     setTimeout(() => {
-      dispatch(clearData())
-      dispatch(logOut())
-    }, 500)
-    setTimeout(() => {
-      navigation.navigate('Login')
-    }, 1000);
-  }
-
+      dispatch(clearData());
+      dispatch(logOut());
+    }, 500);
+  };
+  
   return (
     <View style={styles.container}>
       <View>

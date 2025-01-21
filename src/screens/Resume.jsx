@@ -68,7 +68,7 @@ const Resume = () => {
         <Text style={styles.detailsTitle}>Detalhes</Text>
         <Text style={styles.details}>{appointment?.obs || 'Nenhuma observação inclusa'}</Text>
         { 
-        user.userType !== 'pacient' && 
+        user && user.userType !== 'pacient' && 
           <TouchableOpacity 
             style={styles.button} 
             onPress={() => navigation.navigate('Request')}

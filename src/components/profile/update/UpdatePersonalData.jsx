@@ -9,33 +9,69 @@ import {
   ScrollView, 
   Image,
   Alert,
-  Modal
+  Modal,
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadFileToS3 } from '../../../lib/functions/s3Utils'
+import { uploadFileToS3 } from '../../../lib/functions/s3Utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserData } from '../../../lib/actions/userRequest';
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+const formatDate = (date) => {
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 const UpdatePersonalData = () => {
   const navigation = useNavigation();
-  const route = useRoute()
-  const user = useSelector((state) => state.user?.currentUser)
-  const dispatch = useDispatch()
+  const route = useRoute();
+  const user = useSelector((state) => state.user?.currentUser);
+  const dispatch = useDispatch();
   
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(user);
-
-  const [modalVisible, setModalVisible] = useState(false); // Controle do Modal
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false); // Controle do Date Picker
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
+  const handleInputChangeAddress = (field, value) => {
+    const fields = field.split('.');  // Quebrar o nome do campo em partes
+    if (fields.length === 2) {
+      setFormData(prevState => ({
+        ...prevState,
+        [fields[0]]: {
+          ...prevState[fields[0]],
+          [fields[1]]: value,  // Atualiza o campo específico dentro de 'address'
+        }
+      }));
+    } else {
+      setFormData({ ...formData, [field]: value });
+    }
+  };
+  
+
   const handleSave = () => {
-    updateUserData(dispatch, user._id, formData, user)
+    // Crie um objeto com os dados para envio
+    const sendData = { ...formData };
+    console.log('actualy\n\n\n\n\n')
+    console.log(sendData)
+    console.log('\n\n\n')
+    // Verifique se a data foi alterada antes de modificá-la
+    if (formData.birthdate && formData.birthdate instanceof Date) {
+      sendData.birthdate = formData.birthdate.toISOString();
+    }
+  
+    // Enviar para o backend
+    updateUserData(dispatch, user._id, sendData, user);
     navigation.goBack();
   };
 
@@ -47,21 +83,21 @@ const UpdatePersonalData = () => {
     }
   
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'], // Corrigido para ['images', 'videos']
+      mediaTypes: ['images', 'videos'], 
       allowsEditing: true,
       quality: 1,
     });
   
     if (!result.canceled) {
-      setLoading(true); // Inicia o loading
+      setLoading(true); 
       try {
         const fileUrl = await uploadFileToS3(result.assets[0]);
-        setFormData({ ...formData, imageUri: fileUrl });
+        setFormData({ ...formData, img: fileUrl });
       } catch (error) {
         Alert.alert('Erro', 'Falha ao fazer upload da imagem.');
       } finally {
-        setLoading(false); // Finaliza o loading
-        setModalVisible(!modalVisible)
+        setLoading(false); 
+        setModalVisible(!modalVisible);
       }
     }
   };
@@ -82,6 +118,19 @@ const UpdatePersonalData = () => {
     </View>
   );
 
+  // Função para mostrar o Date Picker
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  // Função para lidar com a data selecionada
+  const handleDateConfirm = (event, selectedDate) => {
+    setDatePickerVisibility(false);
+    if (selectedDate) {
+      setFormData({ ...formData, birthdate: selectedDate }); // Salva a data como objeto Date
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -100,11 +149,17 @@ const UpdatePersonalData = () => {
           value={formData.name}
           onChangeText={(value) => handleInputChange('name', value)}
         />
-        <InputField
-          label="Data de Nascimento"
-          value={formData.birthDate}
-          onChangeText={(value) => handleInputChange('birthDate', value)}
-        />
+        
+        {/* Campo para a data de nascimento */}
+        <View style={styles.inputField}>
+          <Text style={styles.label}>Data de Nascimento</Text>
+          <TouchableOpacity onPress={showDatePicker} style={styles.input}>
+            <Text style={styles.inputText}>
+              {formData.birthdate ? formatDate(new Date(formData.birthdate)) : 'Selecione a data'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        
         <InputField
           label="Telefone"
           value={formData.phone}
@@ -130,37 +185,43 @@ const UpdatePersonalData = () => {
           label="CPF"
           value={formData.cpf}
           onChangeText={(value) => handleInputChange('cpf', value)}
-        />
+        />    
         <InputField
           label="CEP"
           value={formData?.address?.cep}
-          onChangeText={(value) => handleInputChange('address.cep', value)}
+          onChangeText={(value) => handleInputChangeAddress('address.cep', value)}
         />
         <InputField
-          label="Endereço"
+          label="Endereço (Rua, Nº)"
           value={formData?.address?.endereco}
-          onChangeText={(value) => handleInputChange('address.endereco', value)}
+          onChangeText={(value) => handleInputChangeAddress('address.endereco', value)}
+        />
+         <InputField
+          label="Complemento"
+          value={formData?.address?.complemento}
+          onChangeText={(value) => handleInputChangeAddress('address.complemento', value)}
         />
         <InputField
           label="Cidade"
           value={formData?.address?.cidade}
-          onChangeText={(value) => handleInputChange('address.cidade', value)}
+          onChangeText={(value) => handleInputChangeAddress('address.cidade', value)}
         />
         <InputField
           label="Estado"
           value={formData?.address?.estado}
-          onChangeText={(value) => handleInputChange('address.estado', value)}
+          onChangeText={(value) => handleInputChangeAddress('address.estado', value)}
         />
         <View style={styles.imageContainer}>
-          {formData?.img ? (
+          {
+          formData?.img ? (
             <View>
-              <Text style={styles.label && {textAlign: 'center'}}>Imagem de Perfil</Text>
+              <Text style={[styles.label, {textAlign: 'center', marginBottom: 10}]}>Imagem de Perfil</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setModalVisible(true)} // Abre o modal para escolher foto
+                onPress={() => setModalVisible(true)} 
               >
                 <Image 
-                  source={{ uri: formData.imageUri }} 
+                  source={{ uri: formData?.img || null}} 
                   style={styles.imagePreview} 
                 />
               </TouchableOpacity>
@@ -170,7 +231,7 @@ const UpdatePersonalData = () => {
               <Text style={styles.placeholderText}>Nenhuma imagem selecionada</Text>
               <TouchableOpacity
                 style={styles.customBtn}
-                onPress={() => setModalVisible(true)} // Abre o modal para escolher foto
+                onPress={() => setModalVisible(true)} 
               >
                 <Ionicons 
                   style={{
@@ -224,6 +285,15 @@ const UpdatePersonalData = () => {
           }
         </View>
       </Modal>
+
+      {/* DateTimePicker Modal */}
+      {isDatePickerVisible && (
+        <DateTimePicker
+          value={new Date(formData.birthdate || new Date())}
+          mode="date"
+          onChange={handleDateConfirm}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -276,106 +346,99 @@ const styles = StyleSheet.create({
     color: '#1f2937',
   },
   imageContainer: {
-    marginBottom: 15,
-    objectFit: 'cover'
-  },
-  imagePreview: {
-    marginTop: 10,
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 10,
+    marginTop: 20,
     alignSelf: 'center',
-  },
-  placeholderText: {
-    textAlign: 'center',
-    color: '#898989',
-    marginBottom: 10,
   },
   button: {
-    marginTop: 10,
-    backgroundColor: '#ececec',
-    width: 120,
-    height: 120,
-    borderRadius: 10,
+    width: 110,
+    height: 110,
+    justifyContent: 'center',
+    alignContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center'
-  },
-  customBtn: {
-    alignSelf: 'center',
     backgroundColor: '#ececec',
-    borderRadius: 10,
-    width: 50,
-    height: 50,
-    padding: 0
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
+    borderRadius: 8
+
+  },  
+  imagePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: '#ececec',
   },
   saveButton: {
     backgroundColor: '#bce08f',
-    padding: 15,
-    borderRadius: 8,
-    marginTop: 20,
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 30,
   },
   saveButtonText: {
     color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: 300,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   modalButton: {
-    backgroundColor: '#508dfd',
-    padding: 10,
-    margin: 10,
-    borderRadius: 8,
-    width: '80%',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
   },
   modalButtonText: {
-    color: 'white',
     fontSize: 16,
     textAlign: 'center',
   },
   modalCloseButton: {
-    backgroundColor: '#898989',
-    padding: 10,
+    paddingVertical: 10,
     marginTop: 10,
-    borderRadius: 8,
-    width: '80%',
-  },
-  dividerHr: {
-    height: 1,
-    backgroundColor: '#ececec',
-    marginVertical: 10,
   },
   loadingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fundo semi-transparente
-    zIndex: 1, // Garante que fique acima do conteúdo
+    width: '100%',
+    height: 'auto',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  inputText: {
+    fontSize: 16,
+    color: '#1f2937',
+  },
+  customBtn: {
+    backgroundColor: 'lightgray',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#9e9e9e',
+    textAlign: 'center',
+  },
+  picker: {
+    backgroundColor: '#f8f8f8',
+    marginTop: 10,
+    height: 50,
+  },
+  dividerHr: {
+    borderBottomWidth: 1,
+    borderColor: '#e0e0e0',
+    marginVertical: 20,
   },
 });
 
