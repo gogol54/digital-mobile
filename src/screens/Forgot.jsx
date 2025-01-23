@@ -19,7 +19,7 @@ const Forgot = () => {
   const navigation = useNavigation();
 
   const handlePasswordRecovery = async () => {
-    setLoading(true);
+    setLoading(true)
     console.log(email)
 
     try {

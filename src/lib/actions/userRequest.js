@@ -122,6 +122,7 @@ export const updateUserPassword = async (id, password) => {
 
 export const ForgotEmail = async (email, navigation) => {
   try {
+    console.log('chegou aqui')
     const response = await publicRequest.post('/user/restart/pass', email);
     if (response) {
       console.log(response.message)
