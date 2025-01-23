@@ -120,13 +120,13 @@ export const updateUserPassword = async (id, password) => {
   }
 };
 
-export const ForgotEmail = async (email, router) => {
+export const ForgotEmail = async (email, navigation) => {
   try {
     const response = await publicRequest.post('/user/restart/pass', email);
     if (response) {
-      console.log(response.message);
+      console.log(response.message)
+      navigation.goBack()
       showToast('success', 'Enviamos um link para redefinição no seu email, verifique sua caixa de spam!');
-      router.push('/');
     }
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Erro ao enviar o email.';

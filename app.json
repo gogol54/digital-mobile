@@ -9,7 +9,8 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
+      
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -19,7 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#060d57"
       },
       "package": "com.seuapp.crodigitalmobile",
       "versionCode": 1

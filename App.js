@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#060d57', // Combine com a cor de fundo do splash
+    backgroundColor: '#ffffff', // Combine com a cor de fundo do splash
   },
   gif: {
     width: 150,

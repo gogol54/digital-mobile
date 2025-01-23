@@ -10,6 +10,7 @@ import {
   Image 
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { ForgotEmail } from "../lib/actions/userRequest";
 
 const Forgot = () => {
   const [email, setEmail] = useState("");
@@ -19,15 +20,15 @@ const Forgot = () => {
 
   const handlePasswordRecovery = async () => {
     setLoading(true);
+    console.log(email)
+
     try {
       // Simulação de envio do e-mail de recuperação
-      console.log("E-mail para recuperação enviado para:", email);
-      alert("Se o e-mail estiver registrado, você receberá instruções para recuperar sua senha.");
-      navigation.goBack();
+      ForgotEmail(email, navigation)
     } catch (error) {
-      console.error("Erro ao enviar e-mail de recuperação:", error);
+      console.error("Erro ao enviar e-mail de recuperação:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
