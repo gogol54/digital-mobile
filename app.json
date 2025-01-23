@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "crodigital-mobile",
+    "name": "CRO Digital",
     "slug": "crodigital-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,16 +13,24 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.seuapp.crodigitalmobile"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.seuapp.crodigitalmobile",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c20926d3-a664-4320-bd27-15e691705051"
+      }
     }
   }
 }

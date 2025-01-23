@@ -1,19 +1,22 @@
-import { MotiView } from 'moti'
-import React from 'react'
+import { MotiView } from 'moti';
+import React from 'react';
 import { 
   View, 
   Text, 
   SafeAreaView, 
   Image, 
   StyleSheet,
-} from 'react-native'
-import { useSelector } from 'react-redux'
+  Dimensions
+} from 'react-native';
+import { useSelector } from 'react-redux';
+
+const { width } = Dimensions.get('window'); // Para responsividade
 
 const TopProfilePage = () => {
-  const user = useSelector((state) => state.user?.currentUser)
+  const user = useSelector((state) => state.user?.currentUser);
   
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>Configurações de Perfil</Text>
       <MotiView
         style={styles.boxArea}
@@ -25,20 +28,20 @@ const TopProfilePage = () => {
           delay: 200,
         }} 
       >
-        <SafeAreaView style={{flexDirection: 'row'}}>
+        <SafeAreaView style={styles.contentArea}>
           <Image 
             style={styles.avatar} 
-            source={{ uri: user?.img }} 
+            source={{ uri: user?.img || 'https://via.placeholder.com/150' }} // Placeholder caso a imagem não exista
           />
           <View style={styles.textArea}>
-            <Text style={styles.textAreaName}  numberOfLines={2}>{user?.name || null}</Text>
-            <Text style={styles.textAreaMail}>{user?.email || null}</Text>
+            <Text style={styles.textAreaName}>{user?.name || 'Usuário'}</Text>
+            <Text style={styles.textAreaMail}>{user?.email || 'email@exemplo.com'}</Text>
           </View>
         </SafeAreaView>
       </MotiView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   title: {
@@ -52,41 +55,47 @@ const styles = StyleSheet.create({
     backgroundColor: '#1f2937',
     marginTop: 20, 
     width: '90%', 
-    height: 110, 
+    height: 120, 
+    borderTopEndRadius: 20,
     borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    alignSelf: 'center'
+
+    alignSelf: 'center',
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Sombra para Android
+  },
+  contentArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   avatar: {
-    marginLeft: 20,
-    marginTop: 20,
-    width: 70,
-    height: 70,
-    objectFit: 'cover',
-    borderRadius: 50,
-    backgroundColor: '#ececec'
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#ececec',
   },
   textArea: {
-    marginTop: 30, 
-    alignSelf: 'center',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
+    flex: 1,
+    marginLeft: 15, // Espaçamento entre avatar e texto
+    justifyContent: 'center',
+    marginTop: 10
   },
   textAreaName: {
     color: '#fff', 
-    fontSize: 14, 
-    textAlign: 'justify', 
-    marginLeft: 20,
-    maxWidth: '90%'
+    fontSize: 16, 
+    fontWeight: '600',
+    maxWidth: width * 0.75, // Ajusta largura para ocupar espaço restante
   },
   textAreaMail: {
     color: '#c9c9c9', 
-    textAlign: 'justify', 
-    flexWrap: 'wrap',
-    fontSize: 13,
-    marginLeft: 20,
-    maxWidth: '90%'
+    fontSize: 14,
+    marginTop: 5,
+    maxWidth: width * 0.75,
   },
+});
 
-})
-export default TopProfilePage
+export default TopProfilePage;

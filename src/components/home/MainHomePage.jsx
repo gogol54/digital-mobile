@@ -9,33 +9,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'moti';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { formatDate } from '../../lib/functions/nativeFunctions';
 
 const MainHomePage = ({ user }) => {
   const navigation = useNavigation();
   const list = useSelector((state) => state.dataset?.list);
   console.log(list);
 
-const formatDate = (date) => {
-  const parsedDate = new Date(date);
-  if (isNaN(parsedDate)) return 'Data inválida'; // Verifica se a data é válida
-
-  const options = {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  };
-
-  const formatter = new Intl.DateTimeFormat('pt-BR', options);
-  const formattedDate = formatter.format(parsedDate);
-
-  return formattedDate.replace(' ', ' • '); // Adiciona "•" entre o mês e a hora
-};
-  
   const getStatusColor = (status) => {
     switch (status) {
       case 'pendente':
@@ -99,7 +80,7 @@ const formatDate = (date) => {
                   color="#ababab"
                   size={25}
                 />
-                <Text style={styles.dataText}>{appointment.updatedAt}</Text>
+                <Text style={styles.dataText}>{formatDate(appointment.createdAt_formatted)}</Text>
               </View>
               <View style={styles.gridContainer}>
                 <Image 

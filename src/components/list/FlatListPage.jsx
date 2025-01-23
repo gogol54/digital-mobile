@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import moment from 'moment'
 import 'moment/locale/pt-br'
 import NavigationModal from './NavigationModal'
 import { 
@@ -19,6 +18,7 @@ import {
   useSelector 
 } from 'react-redux'
 import { listOfFiles } from '../../lib/actions/requestData'
+import { formatDate } from '../../lib/functions/nativeFunctions'
 
 const FlatListPage = () => {
   const [selectedItem, setSelectedItem] = useState(null)
@@ -44,10 +44,6 @@ const FlatListPage = () => {
     setTimeout(() => {
       setRefreshing(false)
     }, 2000)
-  };
-
-  const formatDate = (date) => {
-    return moment(date).locale('pt-br').format('ddd DD MMM • HH:mm');
   };
 
   const getStatusColor = (status) => {
@@ -82,7 +78,7 @@ const FlatListPage = () => {
           <View style={styles.itemHeader}>
             <View style={styles.dateRow}>
               <Ionicons name="time-outline" color="#ababab" size={25} />
-              <Text style={styles.date}>{formatDate(item.date)}</Text>
+              <Text style={styles.date}>{formatDate(item.createdAt_formatted)}</Text>
             </View>
             <Ionicons 
               name="ellipsis-vertical-outline" 
