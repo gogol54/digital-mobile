@@ -10,7 +10,6 @@ import moment from 'moment'
 SplashScreen.preventAutoHideAsync();
 
 const HeaderHomePage = ({user}) => {
-	console.log(user)
 	const [fontsLoaded] = useFonts({
 		Audiowide_400Regular,
 	});

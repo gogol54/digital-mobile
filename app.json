@@ -10,8 +10,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "cover",
-      
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#060d57"
     },
     "ios": {
       "supportsTablet": true,
@@ -25,6 +24,15 @@
       "package": "com.seuapp.crodigitalmobile",
       "versionCode": 1
     },
+    "plugins": [
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ]
+    ],
+    "orientation": "default",
     "web": {
       "favicon": "./assets/favicon.png"
     },

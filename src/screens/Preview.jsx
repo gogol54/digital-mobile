@@ -6,10 +6,13 @@ import {
   Image, 
   StyleSheet, 
   TouchableOpacity, 
-  Modal 
+  Modal, 
+  Alert 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const Preview = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,10 +20,33 @@ const Preview = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { appointment } = route.params;
- 
+
+  // Função para abrir a imagem selecionada na modal
   const openImage = (index) => {
-    setSelectedImage(appointment?.files[index]);  // Usando o índice diretamente
+    setSelectedImage(appointment?.files[index]);
     setModalVisible(true);
+  };
+
+  // Função para fazer o download da imagem
+  const downloadImage = async () => {
+    try {
+      if (selectedImage) {
+        const uri = selectedImage; // Pegue a URI da imagem
+        const fileUri = FileSystem.documentDirectory + "downloaded_image.jpg"; // Caminho do arquivo para salvar localmente
+
+        // Baixando o arquivo para o dispositivo
+        const { uri: localUri } = await FileSystem.downloadAsync(uri, fileUri);
+        
+        // Exibe um alerta para informar que a imagem foi baixada
+        Alert.alert("Download Completo", `Imagem salva em: ${localUri}`);
+        
+        // Opcional: Compartilhar a imagem
+        await Sharing.shareAsync(localUri);
+      }
+    } catch (error) {
+      console.error("Erro ao baixar a imagem:", error);
+      Alert.alert("Erro", "Ocorreu um erro ao tentar fazer o download da imagem.");
+    }
   };
 
   return (
@@ -56,7 +82,13 @@ const Preview = () => {
           <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(false)}>
             <Text style={styles.modalCloseText}>Fechar</Text>
           </TouchableOpacity>
+
           <Image source={{ uri: selectedImage }} style={styles.modalImage} />
+
+          {/* Botão de Download */}
+          <TouchableOpacity onPress={downloadImage} style={styles.downloadButton}>
+            <Text style={styles.downloadButtonText}>Baixar Imagem</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -67,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop: 30
+    marginTop: 30,
   },
   header: {
     flexDirection: 'row',
@@ -101,12 +133,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: 10,
   },
   modalImage: {
-    width: '90%',
-    height: '60%',
+    width: '100%',
+    height: '80%',
     resizeMode: 'contain',
-    marginBottom: 10,
   },
   modalClose: {
     position: 'absolute',
@@ -115,6 +147,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modalCloseText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  downloadButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
+  },
+  downloadButtonText: {
     color: '#fff',
     fontSize: 16,
   },

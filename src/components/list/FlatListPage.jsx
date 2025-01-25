@@ -23,11 +23,11 @@ import { formatDate } from '../../lib/functions/nativeFunctions'
 const FlatListPage = () => {
   const [selectedItem, setSelectedItem] = useState(null)
   const [selected, setSelected] = useState('finalizados')
-  const [refreshing, setRefreshing] = useState(false)
   const navigation = useNavigation()
   const modalRef = React.useRef(null) // Ref do Modalize
   const user = useSelector((state)=> state.user?.currentUser)
   const list = useSelector((state) => state.dataset?.list)
+  const [refreshing, setRefreshing] = useState(false)
   const dispatch = useDispatch()
   
   const getFilteredPatients = () =>

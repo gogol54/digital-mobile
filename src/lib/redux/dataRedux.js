@@ -74,12 +74,9 @@ const productSlice = createSlice({
     },
     updateFileSuccess: (state, action) => { 
       state.isFetching = false; 
-      console.log("Action Payload:", action.payload); // Adicione isto 
       const index = state.list.findIndex((item) => item._id === action.payload._id); 
-      console.log("Index Found:", index); // Adicione isto 
       if (index !== -1) { 
         state.list[index] = { ...state.list[index], ...action.payload }; 
-        console.log("Updated State List:", state.list[index]); // Adicione isto 
       } 
     },
     updateFileFailure:(state) => {

@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import 
+  React, { 
+  useEffect, 
+  useState 
+} from 'react';
+import { 
+  StyleSheet, 
+  View,
+} from 'react-native';
 import HeaderHomePage from '../components/home/HeaderHomePage';
 import MainHomePage from '../components/home/MainHomePage';
 import BottomBar from '../components/BottomBar';
@@ -11,7 +18,7 @@ const Home = () => {
   const user = useSelector((state) => state.user?.currentUser);
   const [isReady, setIsReady] = useState(false);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     if (user && user.token) {
       setIsReady(true);
@@ -31,7 +38,8 @@ const Home = () => {
   }, [isReady, user, dispatch]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+>
       {user && <HeaderHomePage user={user} />}
       {user && <MainHomePage user={user} />}
       <BottomBar />

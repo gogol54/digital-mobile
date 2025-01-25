@@ -62,9 +62,7 @@ const UpdatePersonalData = () => {
   const handleSave = () => {
     // Crie um objeto com os dados para envio
     const sendData = { ...formData };
-    console.log('actualy\n\n\n\n\n')
-    console.log(sendData)
-    console.log('\n\n\n')
+
     // Verifique se a data foi alterada antes de modificá-la
     if (formData.birthdate && formData.birthdate instanceof Date) {
       sendData.birthdate = formData.birthdate.toISOString();

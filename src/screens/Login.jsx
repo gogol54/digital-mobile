@@ -7,12 +7,13 @@ import {
   ActivityIndicator, 
   StyleSheet, 
   KeyboardAvoidingView,
-  Image 
+  Image
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useSelector, useDispatch } from "react-redux"
 import { login } from "../lib/actions/userRequest"
+import { useScreenOrientation } from "../lib/functions/orientationScreen";
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -20,7 +21,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const dispatch = useDispatch()
-
+  useScreenOrientation({ pathname: "/login" });
   const navigation = useNavigation();
 
   const handleSubmit = async () => {

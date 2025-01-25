@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   StyleSheet, 
   View, 
   Text, 
   TouchableOpacity, 
   Image, 
+  RefreshControl,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'moti';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatDate } from '../../lib/functions/nativeFunctions';
+import { listOfFiles } from '../../lib/actions/requestData';
 
 const MainHomePage = ({ user }) => {
   const navigation = useNavigation();
   const list = useSelector((state) => state.dataset?.list);
-  console.log(list);
+  const [refreshing, setRefreshing] = useState(false)
+  const dispatch = useDispatch()
 
+  const onRefresh = () => {
+    setRefreshing(true)
+    listOfFiles(dispatch, user)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 2000)
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case 'pendente':
@@ -69,7 +79,11 @@ const MainHomePage = ({ user }) => {
           <Text style={styles.topTitle}>Meus Exames</Text>
         }
       </View>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {list && list.length > 0 ? 
           list.slice(-3).map((appointment, index) => ( // Pegando os últimos 3 itens
             <View key={appointment._id || `appointment-${index}`} style={styles.secondArea}>

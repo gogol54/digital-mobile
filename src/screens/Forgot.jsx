@@ -20,7 +20,6 @@ const Forgot = () => {
 
   const handlePasswordRecovery = async () => {
     setLoading(true)
-    console.log(email)
 
     try {
       // Simulação de envio do e-mail de recuperação

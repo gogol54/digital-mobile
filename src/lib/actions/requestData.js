@@ -28,7 +28,6 @@ export const createRequestExame = async (dispatch, payload, navigation, user) =>
       headers: { authorization: `Bearer ${user.token}` }
     });
     if(response.data.success === true){
-      console.log(response.data.newFile)
       dispatch(addFileSuccess(payload))
       showToast('success', 'Solicitação gerada com sucesso!')
       navigation.navigate('List') 
@@ -46,7 +45,6 @@ export const getStatus = async (dispatch, user) => {
     const response = await publicRequest.get('/file/stats/status', {
       headers: { authorization: `Bearer ${user.token}` }
     })
-    console.log(response.data)
     dispatch(getStatusSuccess(response.data))
   } catch (error) {
     dispatch(getStatusFailure())
@@ -59,7 +57,6 @@ export const getSingleData = async (dispatch, id, user) => {
     const response = await publicRequest.get(`/file/${id}`, {
       headers: { authorization: `Bearer ${user.token}` }
     });
-    console.log(response.data)
     if(response){
       dispatch(getOneFileSuccess(response.data))
     }
@@ -91,7 +88,6 @@ export const listOfFiles = async (dispatch, user) => {
     }
 
     if (response) {
-      console.log(response)
       dispatch(getFilesSuccess(response.data)); 
     }
   } catch (error) {

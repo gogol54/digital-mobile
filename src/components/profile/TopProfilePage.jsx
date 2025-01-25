@@ -35,7 +35,13 @@ const TopProfilePage = () => {
           />
           <View style={styles.textArea}>
             <Text style={styles.textAreaName}>{user?.name || 'Usuário'}</Text>
-            <Text style={styles.textAreaMail}>{user?.email || 'email@exemplo.com'}</Text>
+            <Text 
+              style={styles.textAreaMail} 
+              numberOfLines={1} 
+              ellipsizeMode="tail"
+            >
+              {user?.email || 'email@exemplo.com'}
+            </Text>
           </View>
         </SafeAreaView>
       </MotiView>
@@ -75,6 +81,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 80,
     height: 80,
+    marginTop: 10,
     borderRadius: 40,
     backgroundColor: '#ececec',
   },
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
     color: '#c9c9c9', 
     fontSize: 14,
     marginTop: 5,
-    maxWidth: width * 0.75,
+    maxWidth: width * 0.75, // Define largura máxima para truncar corretamente
   },
 });
 

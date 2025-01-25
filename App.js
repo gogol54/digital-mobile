@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Image, StyleSheet } from 'react-native';
+import { 
+  View,
+  ActivityIndicator, 
+  Image, 
+  StyleSheet 
+} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import Routes from './src/routes';
 import { Provider } from 'react-native-paper';
@@ -8,7 +13,12 @@ import { Provider as ProviderRedux } from 'react-redux';
 import { persistor, store } from './src/lib/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import Toast from 'react-native-toast-message';
-import { useFonts, Montserrat_400Regular, Montserrat_500Medium, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import { 
+  useFonts, 
+  Montserrat_400Regular, 
+  Montserrat_500Medium, 
+  Montserrat_700Bold 
+} from '@expo-google-fonts/montserrat';
 import { Audiowide_400Regular } from '@expo-google-fonts/audiowide';
 
 SplashScreen.preventAutoHideAsync(); // Impede o splash automático do Expo
@@ -21,6 +31,7 @@ const App = () => {
     Montserrat_500Medium, 
     Montserrat_700Bold
   });
+  console.log('Fonts loaded:', fontsLoaded);
 
   useEffect(() => {
     const prepareApp = async () => {
@@ -33,6 +44,7 @@ const App = () => {
         console.warn('Erro ao carregar recursos:', e);
       } finally {
         setIsAppReady(true);
+        console.log('App is ready!');
         SplashScreen.hideAsync(); // Esconde o Splash do Expo
       }
     };
