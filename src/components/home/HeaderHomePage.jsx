@@ -1,25 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useFonts } from '@expo-google-fonts/audiowide'
 import { Audiowide_400Regular } from '@expo-google-fonts/audiowide'
 import { Image, SafeAreaView, StyleSheet, View, Text } from 'react-native'
-import * as SplashScreen from 'expo-splash-screen'
 import { MotiView } from 'moti'
 import moment from 'moment'
-
-// Previne o auto-hide do Splash Screen
-SplashScreen.preventAutoHideAsync();
 
 const HeaderHomePage = ({user}) => {
 	const [fontsLoaded] = useFonts({
 		Audiowide_400Regular,
 	});
-
-	// Esconde o Splash quando as fontes forem carregadas
-	useEffect(() => {
-		if (fontsLoaded) {
-			SplashScreen.hideAsync();
-		}
-	}, [fontsLoaded]);
 
 	if (!fontsLoaded) {
 		return null; // Enquanto carrega, mantém o Splash visível
@@ -29,7 +18,6 @@ const HeaderHomePage = ({user}) => {
 		return moment(date).locale('pt-br').format('DD/MM/YYYY');
 	};
 		
-
   return (
 		<View  
 			style={styles.container}

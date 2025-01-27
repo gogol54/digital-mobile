@@ -3016,14 +3016,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-async-storage/async-storage@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@react-native-async-storage/async-storage@npm:2.1.0"
+"@react-native-async-storage/async-storage@npm:1.23.1":
+  version: 1.23.1
+  resolution: "@react-native-async-storage/async-storage@npm:1.23.1"
   dependencies:
     merge-options: "npm:^3.0.4"
   peerDependencies:
-    react-native: ^0.0.0-0 || >=0.65 <1.0
-  checksum: 10c0/76a81a55059e93e256f6e9cf3f33a49d24ba83ce2f88e52343107953a66168c533bb387111a88708247c926297ee93c681c4936bcb66993dba78ea7fb28c9fdf
+    react-native: ^0.0.0-0 || >=0.60 <1.0
+  checksum: 10c0/6cfdcab91f0e04f80f4aa91397eb4aedcd1124bf2a997cb730c7f2c70dad75d2aa0ca0f41576ed4e34544a1f79e090169f566366c32a89a41b74bf74bea1c1db
   languageName: node
   linkType: hard
 
@@ -3046,13 +3046,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-picker/picker@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "@react-native-picker/picker@npm:2.11.0"
+"@react-native-picker/picker@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@react-native-picker/picker@npm:2.9.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/39c970f123162cbdc5d580418a99332c3269e638c641eeb2cfd147056d0635905cff815eb0bcdcc10f20e2f4de711a24f5d837af71055b928b2182d8be395fd0
+  checksum: 10c0/a7b64b1073a2a31f2efdcdd767316312a55516c80f2f6a48f3110875f6029b82cf9067fbea1da3df2ee992233f8aed23928f39ee935ef80c9c20ce06bb836303
   languageName: node
   linkType: hard
 
@@ -5452,9 +5452,9 @@ __metadata:
     "@babel/plugin-transform-private-methods": "npm:^7.25.9"
     "@expo-google-fonts/audiowide": "npm:^0.2.3"
     "@expo-google-fonts/montserrat": "npm:^0.2.3"
-    "@react-native-async-storage/async-storage": "npm:^2.1.0"
+    "@react-native-async-storage/async-storage": "npm:1.23.1"
     "@react-native-community/datetimepicker": "npm:^8.2.0"
-    "@react-native-picker/picker": "npm:^2.11.0"
+    "@react-native-picker/picker": "npm:2.9.0"
     "@react-navigation/native": "npm:^7.0.14"
     "@react-navigation/native-stack": "npm:^7.2.0"
     "@reduxjs/toolkit": "npm:^2.5.0"
@@ -5486,7 +5486,7 @@ __metadata:
     react-native-paper: "npm:^5.12.5"
     react-native-reanimated: "npm:^3.16.6"
     react-native-safe-area-context: "npm:4.12.0"
-    react-native-screens: "npm:^4.4.0"
+    react-native-screens: "npm:~4.4.0"
     react-native-snap-carousel: "npm:^3.9.1"
     react-native-toast-message: "npm:^2.2.1"
     react-native-uuid: "npm:^2.0.3"
@@ -9837,16 +9837,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.4.0":
-  version: 4.5.0
-  resolution: "react-native-screens@npm:4.5.0"
+"react-native-screens@npm:~4.4.0":
+  version: 4.4.0
+  resolution: "react-native-screens@npm:4.4.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/948b5bf0eb2fe250f9bbc0de011bf7ed14456924a0fb08ce66660913362c89849b5f4355fc8eb6577ab25cd74dbaa1492ea923b4ec173686c5e05ad0c3a699b3
+  checksum: 10c0/63eff2f7761109ed05b0656c28bf34c83d5d7ebbcd92931202a250cab0e54109c764fac3471db7ae52f5c6c782bfca5caf5d8f1dc9a4a27a4b9889aeec7a4dcc
   languageName: node
   linkType: hard
 
