@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 20,
     margin: 20,
-    marginBottom: '50',
+    marginBottom: '100',
   },
   firstArea: {
     display: 'flex', 

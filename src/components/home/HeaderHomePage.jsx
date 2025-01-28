@@ -1,19 +1,10 @@
 import React from 'react'
-import { useFonts } from '@expo-google-fonts/audiowide'
-import { Audiowide_400Regular } from '@expo-google-fonts/audiowide'
 import { Image, SafeAreaView, StyleSheet, View, Text } from 'react-native'
 import { MotiView } from 'moti'
 import moment from 'moment'
 
 const HeaderHomePage = ({user}) => {
-	const [fontsLoaded] = useFonts({
-		Audiowide_400Regular,
-	});
-
-	if (!fontsLoaded) {
-		return null; // Enquanto carrega, mantém o Splash visível
-	}
-
+	console.log(user)
 	const formatDate = (date) => {
 		return moment(date).locale('pt-br').format('DD/MM/YYYY');
 	};
@@ -81,11 +72,11 @@ const styles = StyleSheet.create({
 		marginTop: 100,
 		borderRadius: 16,
 		opacity: 0.9, 
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.1,
-		shadowRadius: 10,
-		boxShadow: '10px 10px 50px 1px #bce08f',
+		shadowColor: '#bce08f',
+		shadowOffset: { width: 0, height: 2 },  // Distância da sombra
+		shadowOpacity: 0.8,  // Opacidade da sombra
+		shadowRadius: 2,  // Raio de difusão da sombra
+		elevation: 5,  // Elevation é específico para Android
 	},
 	boxAreaTop: {
     justifyContent: 'flex-end', 
