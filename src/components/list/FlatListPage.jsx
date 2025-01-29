@@ -70,20 +70,33 @@ const FlatListPage = () => {
 
   const renderItem = ({ item, index }) => (
     <View
-      style={[styles.item, { boxShadow: `0px 30px 100px -50px ${getStatusColor(item.status)}` }]}
+      style={[
+        styles.item,
+        {
+          shadowColor: getStatusColor(item.status),
+          shadowOffset: { width: 5, height: 40 },
+          shadowOpacity: 0.1,
+          shadowRadius: 20,
+          elevation: 30,
+        },
+      ]}
     >
-      <SafeAreaView style={{flexDirection: 'row', width: '100%'}}>
-        <View style={[styles.hrDivider, { backgroundColor: getStatusColor(item.status) }]} />
-        <View style={{width: '99%'}}>
+      <SafeAreaView style={{ flexDirection: 'row', width: '100%' }}>
+        <View
+          style={[styles.hrDivider, { backgroundColor: getStatusColor(item.status) }]}
+        />
+        <View style={{ width: '99%' }}>
           <View style={styles.itemHeader}>
             <View style={styles.dateRow}>
               <Ionicons name="time-outline" color="#ababab" size={25} />
-              <Text style={styles.date}>{formatDate(item.createdAt_formatted)}</Text>
+              <Text style={styles.date}>
+                {formatDate(item.createdAt_formatted)}
+              </Text>
             </View>
-            <Ionicons 
-              name="ellipsis-vertical-outline" 
-              color="#ababab" 
-              size={25} 
+            <Ionicons
+              name="ellipsis-vertical-outline"
+              color="#ababab"
+              size={25}
               onPress={() => {
                 setSelectedItem(item);
                 modalRef.current?.open(); // Abre o modal
@@ -102,8 +115,6 @@ const FlatListPage = () => {
       </SafeAreaView>
     </View>
   );
-
- 
 
   return (
     <View style={{ flex: 1 }}>
@@ -127,7 +138,7 @@ const FlatListPage = () => {
         data={getFilteredPatients()}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
-        style={{ flex: 1 }}
+        style={{ flex: 1, bottom: 10 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

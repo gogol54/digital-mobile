@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 
 const Preview = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,25 +27,30 @@ const Preview = () => {
     setModalVisible(true);
   };
 
-  // Função para fazer o download da imagem
-  const downloadImage = async () => {
+  // Função para salvar a imagem na galeria
+  const saveImageToGallery = async () => {
     try {
-      if (selectedImage) {
-        const uri = selectedImage; // Pegue a URI da imagem
-        const fileUri = FileSystem.documentDirectory + "downloaded_image.jpg"; // Caminho do arquivo para salvar localmente
+      if (!selectedImage) return;
 
-        // Baixando o arquivo para o dispositivo
-        const { uri: localUri } = await FileSystem.downloadAsync(uri, fileUri);
-        
-        // Exibe um alerta para informar que a imagem foi baixada
-        Alert.alert("Download Completo", `Imagem salva em: ${localUri}`);
-        
-        // Opcional: Compartilhar a imagem
-        await Sharing.shareAsync(localUri);
+      // Baixando a imagem para um diretório temporário
+      const fileUri = FileSystem.cacheDirectory + "downloaded_image.jpg";
+      const { uri } = await FileSystem.downloadAsync(selectedImage, fileUri);
+
+      // Pedir permissão para acessar a galeria
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert("Permissão negada", "O aplicativo precisa de permissão para salvar imagens na galeria.");
+        return;
       }
+
+      // Criar um ativo de mídia e salvá-lo na galeria
+      const asset = await MediaLibrary.createAssetAsync(uri);
+      await MediaLibrary.createAlbumAsync("Download", asset, false);
+
+      Alert.alert("Sucesso!", "A imagem foi salva na galeria.");
     } catch (error) {
-      console.error("Erro ao baixar a imagem:", error);
-      Alert.alert("Erro", "Ocorreu um erro ao tentar fazer o download da imagem.");
+      console.error("Erro ao salvar a imagem:", error);
+      Alert.alert("Erro", "Não foi possível salvar a imagem.");
     }
   };
 
@@ -66,7 +71,7 @@ const Preview = () => {
             <Image source={{ uri: item }} style={styles.cardImage} />
           </TouchableOpacity>
         )}
-        keyExtractor={(item, index) => index.toString()} // Usando index como chave única
+        keyExtractor={(item, index) => index.toString()} 
         numColumns={2}
         contentContainerStyle={styles.grid}
       />
@@ -86,8 +91,8 @@ const Preview = () => {
           <Image source={{ uri: selectedImage }} style={styles.modalImage} />
 
           {/* Botão de Download */}
-          <TouchableOpacity onPress={downloadImage} style={styles.downloadButton}>
-            <Text style={styles.downloadButtonText}>Baixar Imagem</Text>
+          <TouchableOpacity onPress={saveImageToGallery} style={styles.downloadButton}>
+            <Text style={styles.downloadButtonText}>Salvar na Galeria</Text>
           </TouchableOpacity>
         </View>
       </Modal>

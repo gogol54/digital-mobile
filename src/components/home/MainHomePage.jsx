@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 20,
     margin: 20,
-    marginBottom: '100',
+    marginBottom: 80,
   },
   firstArea: {
     display: 'flex', 
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     display: 'flex', 
     flexDirection: 'column', 
     justifyContent: 'flex-start',
+    marginBottom: 30
   },
   topTitle: {
     marginTop: 30,
