@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import { showToast } from '../lib/functions/showToast';
 
 const Preview = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,30 +40,31 @@ const Preview = () => {
       // Pedir permissão para acessar a galeria
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert("Permissão negada", "O aplicativo precisa de permissão para salvar imagens na galeria.");
+        setModalVisible(false)
+        showToast("error", "O aplicativo precisa de permissão para salvar imagens na galeria.");
         return;
       }
 
       // Criar um ativo de mídia e salvá-lo na galeria
       const asset = await MediaLibrary.createAssetAsync(uri);
       await MediaLibrary.createAlbumAsync("Download", asset, false);
-
-      Alert.alert("Sucesso!", "A imagem foi salva na galeria.");
+      setModalVisible(false)
+      showToast("success", "Sucesso! A imagem foi salva na galeria.");
     } catch (error) {
-      console.error("Erro ao salvar a imagem:", error);
-      Alert.alert("Erro", "Não foi possível salvar a imagem.");
+      setModalVisible(false)
+      showToast("error", "Erro. Não foi possível salvar a imagem.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={styles.header}> 
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={30} color="#1f2937" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Galeria de Imagens</Text>
+        <Text style={styles.headerTitle}>Galeria de Imagens</Text>
       </View>
-
+    
       {/* Grid */}
       <FlatList
         data={appointment?.files}
@@ -102,20 +104,21 @@ const Preview = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: 'white',
-    marginTop: 30,
+    padding: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 20,
+    marginTop: 30
   },
-  headerText: {
-    fontSize: 24,
+  headerTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
+    color: '#1f2937',
+    marginLeft: 10,
   },
   grid: {
     justifyContent: 'space-between',

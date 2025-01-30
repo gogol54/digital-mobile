@@ -65,7 +65,7 @@ const Resume = () => {
 
           }
         </View>
-        <Text style={styles.detailsTitle}>Detalhes</Text>
+        <Text style={styles.detailsTitle}>Detalhes:</Text>
         <Text style={styles.details}>{appointment?.obs || 'Nenhuma observação inclusa'}</Text>
         { 
         user && user.userType !== 'pacient' && 
@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6b7280',
     marginTop: 10,
-    textAlign: 'justify',
+    textAlign: 'left',
+
   },
   button: {
     backgroundColor: '#1f2937',

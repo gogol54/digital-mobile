@@ -317,13 +317,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginLeft: 10,
+    
+    padding: 20
   },
   form: {
     marginTop: 10,

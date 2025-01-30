@@ -33,8 +33,6 @@ const HeaderHomePage = ({ user }) => {
           </View>
         </SafeAreaView>
       </MotiView>
-      
-     
     </View>
   );
 };
