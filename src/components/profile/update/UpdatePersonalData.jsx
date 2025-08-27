@@ -10,7 +10,6 @@ import {
   Image,
   Alert,
   Modal,
-  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -100,21 +99,33 @@ const UpdatePersonalData = () => {
     }
   };
   
-  const GenderPicker = ({ selectedGender, onSelect }) => (
-    <View style={styles.pickerContainer}>
-      <Text style={styles.label}>Gênero</Text>
-      <Picker
-        selectedValue={selectedGender}
-        onValueChange={(value) => onSelect(value)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Selecione..." value="" />
-        <Picker.Item label="Masculino" value="Masculino" />
-        <Picker.Item label="Feminino" value="Feminino" />
-        <Picker.Item label="Outro" value="Outro" />
-      </Picker>
-    </View>
-  );
+
+  const GenderRadio = ({ selectedGender, onSelect }) => {
+    const options = ["Masculino", "Feminino", "Outro"];
+
+    return (
+      <View style={styles.inputField}>
+        <Text style={styles.label}>Gênero</Text>
+        <View style={styles.radioGroup}>
+          {options.map((option) => (
+            <TouchableOpacity
+              key={option}
+              style={styles.radioOption}
+              onPress={() => onSelect(option)}
+            >
+              <View
+                style={[
+                  styles.radioCircle,
+                  selectedGender === option && styles.radioCircleSelected,
+                ]}
+              />
+              <Text style={styles.radioLabel}>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    );
+  };
 
   // Função para mostrar o Date Picker
   const showDatePicker = () => {
@@ -174,16 +185,14 @@ const UpdatePersonalData = () => {
           onChangeText={(value) => handleInputChange('age', value)}
           keyboardType="numeric"
         />
-        <GenderPicker
+       
+        <GenderRadio
           selectedGender={formData.gender}
           onSelect={(value) => handleInputChange('gender', value)}
         />
+
         <View style={styles.dividerHr}/>
-        <InputField
-          label="CPF"
-          value={formData.cpf}
-          onChangeText={(value) => handleInputChange('cpf', value)}
-        />    
+       
         <InputField
           label="CEP"
           value={formData?.address?.cep}
@@ -439,6 +448,34 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     marginVertical: 20,
   },
+  radioGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  radioOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20,
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#1f2937",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+  },
+  radioCircleSelected: {
+    backgroundColor: "#1f2937",
+  },
+  radioLabel: {
+    fontSize: 14,
+    color: "#1f2937",
+  },
+
 });
 
 export default UpdatePersonalData;

@@ -1,7 +1,9 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import {configureStore, combineReducers} from '@reduxjs/toolkit'
+
 import userReducer from "./userRedux";
 import filesReducer from './dataRedux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import rescueReducer from './rescueRedux';
+import rewardReducer from './rewardRedux';
 
 import {
   persistStore,
@@ -13,6 +15,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
   key: 'root',
@@ -23,6 +26,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   dataset: filesReducer,
+  rescue: rescueReducer,
+  reward: rewardReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,14 +37,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoreActions: [
-          FLUSH, 
-          REHYDRATE, 
-          PAUSE, 
-          PERSIST, 
-          PURGE, 
-          REGISTER
-        ],
+        ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });

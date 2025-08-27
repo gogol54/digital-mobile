@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   StyleSheet,
   View,
@@ -6,11 +5,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Linking,
 } from 'react-native';
-import { 
-  useRoute, 
-  useNavigation 
-} from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -18,8 +15,9 @@ import { useSelector } from 'react-redux';
 const Resume = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const user = useSelector((state) => state.user?.currentUser)
+  const user = useSelector((state) => state.user?.currentUser);
   const { appointment } = route.params;
+
   const formatDate = (date) => {
     return moment(date).locale('pt-br').format('ddd DD MMM • HH:mm');
   };
@@ -27,56 +25,127 @@ const Resume = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pendente':
-        return '#f8d7a5'; 
+        return '#f8d7a5';
       case 'finalizado':
-        return '#bce08f'; 
+        return '#bce08f';
       case 'cancelado':
-        return '#ff7462'; 
+        return '#ff7462';
       default:
-        return '#f8d7a5'; 
+        return '#f8d7a5';
     }
+  };
+
+  const infoFields = [
+    { label: 'Paciente', value: appointment?.pacientName },
+    { label: 'Dentista', value: appointment?.dentistName },
+    { label: 'Tipo de Exame', value: appointment?.dataType?.split(",").join(",\n") },
+    { label: 'Data do Pedido', value: formatDate(appointment?.createdAt) },
+    { label: 'Status', value: appointment?.status },
+    { label: 'Observações', value: appointment?.obs || 'Nenhuma observação inclusa' },
+  ];
+
+  // Função genérica pra abrir links de download
+  const handleDownload = (url) => {
+    if (!url) return;
+    Linking.openURL(url).catch(() =>
+      alert('Não foi possível abrir o arquivo.')
+    );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={30} color="#1f2937" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Detalhes do Exame</Text>
       </View>
-      <View style={styles.content}>
-        <Image style={styles.avatar} source={{ uri: appointment.pacientImg }} />
-        <Text style={styles.doctorName}>{appointment.pacientName}</Text>
-        <Text style={styles.examType}>{appointment.dataType}</Text>
-        <Text style={styles.date}>{formatDate(appointment.createdAt)}</Text>
-        <View style={[styles.statusContainer, { backgroundColor: `${getStatusColor(appointment.status)}` }]}
-        >
-          {
-            appointment.status === 'finalizado' ?
-              <Text 
-                style={styles.status} 
-                onPress={() => navigation.navigate('Preview', { appointment: appointment })}
-              >
-                Visualizar
-              </Text>
-            :
-              <Text style={styles.status}>{appointment.status}</Text>
 
-          }
-        </View>
-        <Text style={styles.detailsTitle}>Detalhes:</Text>
-        <Text style={styles.details}>{appointment?.obs || 'Nenhuma observação inclusa'}</Text>
-        { 
-        user && user.userType !== 'pacient' && 
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('Request')}
-          >
-            <Text style={styles.buttonText}>Agendar Nova Consulta</Text>
-          </TouchableOpacity> 
-        }
+      {/* Avatar + Nome */}
+      <View style={styles.content}>
+        <Image
+          style={styles.avatar}
+          source={{ uri: appointment?.pacientImg }}
+        />
+        <Text style={styles.name}>{appointment?.pacientName}</Text>
       </View>
+
+      {/* Bloco de Informações */}
+      <View style={styles.infoContainer}>
+        {infoFields.map(
+          (field, index) =>
+            field.value && (
+              <View key={index} style={styles.infoRow}>
+                <Text style={styles.infoLabel}>{field.label}:</Text>
+                <Text style={styles.infoValue}>{field.value}</Text>
+              </View>
+            )
+        )}
+      </View>
+
+      {/* Arquivos Disponíveis */}
+      {(appointment?.pdfs?.length > 0 ||
+        appointment?.zips?.length > 0 ||
+        appointment?.dicoms?.length > 0) && (
+        <View style={styles.filesContainer}>
+          <Text style={styles.filesTitle}>Arquivos Disponíveis:</Text>
+
+          {/* PDFs */}
+          {appointment.pdfs?.map((file, idx) => (
+            <TouchableOpacity
+              key={`pdf-${idx}`}
+              style={styles.fileButton}
+              onPress={() => handleDownload(file)}
+            >
+              <Text style={styles.fileButtonText}>Abrir Laudo PDF {idx + 1}</Text>
+            </TouchableOpacity>
+          ))}
+
+          {/* ZIPs */}
+          {appointment.zips?.map((file, idx) => (
+            <TouchableOpacity
+              key={`zip-${idx}`}
+              style={styles.fileButton}
+              onPress={() => handleDownload(file)}
+            >
+              <Text style={styles.fileButtonText}>Download DICOM ZIP {idx + 1}</Text>
+            </TouchableOpacity>
+          ))}
+
+          {/* DICOMs individuais */}
+          {appointment.dicoms?.map((file, idx) => (
+            <TouchableOpacity
+              key={`dcm-${idx}`}
+              style={styles.fileButton}
+              onPress={() => handleDownload(file)}
+            >
+              <Text style={styles.fileButtonText}>Abrir DICOM {idx + 1}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+
+      {/* Status + ação */}
+      <TouchableOpacity
+        style={[
+          styles.statusContainer,
+          { backgroundColor: getStatusColor(appointment.status) },
+        ]}
+        onPress={() =>
+          navigation.navigate('Preview', { appointment: appointment })
+        }
+      >
+        {appointment.status === 'finalizado' ? (
+          <Text
+            style={styles.status}
+          >
+            Abrir
+          </Text>
+        ) : (
+          <Text style={styles.status}>{appointment.status}</Text>
+        )}
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -91,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    marginTop: 30
+    marginTop: 30,
   },
   headerTitle: {
     fontSize: 20,
@@ -101,61 +170,78 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+    marginBottom: 20,
   },
   avatar: {
     width: 100,
     height: 100,
-    backgroundColor: '#ececec',
+    backgroundColor: '#1f2937',
     borderRadius: 50,
-    marginBottom: 20,
-    marginTop: 50
+    marginBottom: 10,
+    marginTop: 30,
   },
-  doctorName: {
+  name: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1f2937',
   },
-  examType: {
-    fontSize: 16,
-    color: '#6b7280',
-    marginTop: 5,
+  infoContainer: {
+    marginTop: 20,
+    marginBottom: 20,
   },
-  date: {
+  infoRow: {
+    marginBottom: 15,
+  },
+  infoLabel: {
     fontSize: 14,
-    color: '#9ca3af',
-    marginTop: 10,
+    fontWeight: '700',
+    color: '#374151',
+  },
+  infoValue: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 2,
+    lineHeight: 20,
+  },
+  filesContainer: {
+    marginBottom: 20,
+  },
+  filesTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#374151',
+    marginBottom: 10,
+  },
+  fileButton: {
+    backgroundColor: '#1f2937',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  fileButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   statusContainer: {
-    backgroundColor: '#f3f4f6',
-    padding: 10,
+    padding: 12,
     borderRadius: 10,
-    marginTop: 15,
+    alignItems: 'center',
+    marginBottom: 20,
   },
   status: {
     fontSize: 14,
     fontWeight: '600',
     color: 'white',
-  },
-  detailsTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1f2937',
-    marginTop: 20,
-    alignSelf: 'flex-start',
-  },
-  details: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginTop: 10,
-    textAlign: 'left',
-
+    textTransform: 'capitalize',
   },
   button: {
     backgroundColor: '#1f2937',
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginTop: 30,
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 14,

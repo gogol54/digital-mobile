@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -47,45 +47,35 @@ const MainHomePage = ({ user }) => {
   return (
     <View style={styles.boxList}>
       <View style={styles.firstArea}>
-        { user.userType !== 'pacient' &&
-          <TouchableOpacity onPress={() => navigation.navigate('Request')}>
-            <Text style={styles.linkData}>
-              Gerar solicitação
-            </Text>
-          </TouchableOpacity>
-        }
-         { user.userType === 'pacient' &&
-          <View>
-            <Text style={{color: 'white'}}>
-              null
-            </Text>
-          </View>
-        }
-        {list &&
-          <TouchableOpacity onPress={() => navigation.navigate('List')}>
-            <Text style={styles.linkData}>
-              Ver Todos
-            </Text>
-          </TouchableOpacity>
-        }
+        <View>
+          {
+            user.userType !== 'pacient' &&
+            <Text style={styles.topTitle}>Últimas solicitações</Text>
+          }
+          {
+            user.userType === 'pacient' &&
+            <Text style={styles.topTitle}>Meus Exames</Text>
+          }
+        </View>
+        <View>
+          {list &&
+            <TouchableOpacity onPress={() => navigation.navigate('Exames')}>
+              <Text style={styles.linkData}>
+                Ver Todos
+              </Text>
+            </TouchableOpacity>
+          }
+        </View>
+        
       </View>
-      <View>
-        {
-          user.userType !== 'pacient' &&
-          <Text style={styles.topTitle}>Últimos solicitações</Text>
-        }
-        {
-          user.userType === 'pacient' &&
-          <Text style={styles.topTitle}>Meus Exames</Text>
-        }
-      </View>
+      
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
         {list && list.length > 0 ? 
-          list.slice(-3).map((appointment, index) => ( // Pegando os últimos 3 itens
+          list.slice(0, 3).map((appointment, index) => ( // Pegando os últimos 3 itens
             <View key={appointment._id || `appointment-${index}`} style={styles.secondArea}>
               <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                 <Ionicons
@@ -103,7 +93,9 @@ const MainHomePage = ({ user }) => {
                 />
                 <View style={styles.dataColumnText}>
                   <Text style={styles.responseName}>{appointment?.pacientName}</Text>
-                  <Text style={styles.dataColumnType}>{appointment?.dataType}</Text>
+                  <Text style={styles.dataColumnType}>
+                    {appointment?.dataType?.split(",").join(",\n")}
+                  </Text>                  
                   <TouchableOpacity
                     onPress={() => navigateToScreen(appointment)}
                     style={[styles.dataColumnBtn, { backgroundColor: getStatusColor(appointment?.status) }]}
@@ -155,18 +147,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 20,
     margin: 20,
-    marginBottom: 80,
+    marginBottom: 10,
   },
   firstArea: {
     display: 'flex', 
-    flexDirection: 'row', 
+    flexDirection: 'row',
+    marginTop: 10,
     justifyContent: 'space-between',
-  },
-  secondArea: {
-    display: 'flex', 
-    flexDirection: 'column', 
-    justifyContent: 'flex-start',
-    marginBottom: 30
   },
   topTitle: {
     marginTop: 30,
@@ -178,6 +165,7 @@ const styles = StyleSheet.create({
   },
   linkData: {
     fontSize: 16,
+    marginTop: 30,
     color: '#59c3ff',  
     fontFamily: 'Montserrat_700Bold',
     fontWeight: '700',
@@ -191,12 +179,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_400Regular',
     fontWeight: '400',
     color: '#ababab',
+    
   },
   gridContainer: {
     width: '100%',
-    height: 140,  
+    height: 160,  
     backgroundColor: '#f8f8fb',
     borderRadius: 12,
+    padding: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -204,7 +194,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50,
-    backgroundColor: '#ececec',
+    backgroundColor: '#1f2937',
     marginLeft: 5,
     marginTop: 40,
   },

@@ -22,7 +22,18 @@ const userSlice = createSlice({
       state.error = true;
     },
 
- 
+    setCurrentUserStart: (state) => {
+      state.isFetching = true;
+    },
+    setCurrentUserSuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentUser = action.payload;
+    },
+    setCurrentUserFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
+
     // LOGOUT Reducer
     logoutStart: (state) => {
       state.isFetching = true; 
@@ -70,20 +81,6 @@ const userSlice = createSlice({
       state.error = true;
     },
 
-    // DELETE METHODS
-    deleteUserStart: (state) => {
-      state.isFetching = true;
-      state.error = false;
-    },
-    deleteUserSuccess: (state, action) => {
-      state.isFetching = false;
-      state.list = state.list.filter(item => item._id !== action.payload); // Garantindo que o payload seja o id
-    },
-    deleteUserFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },  
-
     // UPDATE METHODS
     updateUserStart: (state) => {
       state.isFetching = true;
@@ -112,20 +109,6 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-
-    // CREATE
-    addUserStart: (state) => {
-      state.isFetching = true;
-      state.error = false;
-    },
-    addUserSuccess: (state, action) => {
-      state.isFetching = false;
-      state.list.push(action.payload)
-    },
-    addUserFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },
   },
 });
 
@@ -136,15 +119,14 @@ export const {
   logoutStart,
   logOut,
   logoutFailure,
-  addUserStart,
-  addUserSuccess,
-  addUserFailure,
+  setCurrentUserStart,
+  setCurrentUserSuccess,
+  setCurrentUserFailure,
+
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
-  deleteUserStart,
-  deleteUserSuccess,
-  deleteUserFailure,
+
   getUserStart,
   getUserSuccess,
   getUserFailure,

@@ -1,27 +1,41 @@
-{
-  "cli": {
-    "version": ">= 14.5.0",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "production": {
-      "android": {
-        "buildType": "apk"
-      },
-      "autoIncrement": true
-    }
-  },
-  "submit": {
-    "production": {}
-  }
+{ 
+  "cli": { 
+    "version": ">= 14.5.0", 
+    "appVersionSource": "remote" 
+  }, 
+  "build": { 
+    "development": { 
+      "developmentClient": true, 
+      "distribution": "internal", 
+      "ios": { 
+        "simulator": true 
+      } 
+    }, 
+    "preview": { 
+      "distribution": "internal", 
+      "android": { 
+        "buildType": "apk" 
+      }, 
+      "ios": { 
+        "buildType": "development" 
+      } 
+    }, 
+    "production": { 
+      "android": { 
+        "buildType": "apk" 
+      }, 
+      "ios": { 
+        "buildType": "release", 
+        "scheme": "CRO Digital" 
+      }, 
+      "autoIncrement": true 
+    } 
+  }, 
+  "submit": { 
+    "production": { 
+      "ios": { 
+        "appleId": "jardeleko@outlook.com" 
+      } 
+    } 
+  } 
 }

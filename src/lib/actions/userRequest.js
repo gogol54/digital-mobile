@@ -2,15 +2,12 @@ import {
   loginStart,
   loginSuccess,
   loginFailure,
-  addUserStart,
-  addUserSuccess,
-  addUserFailure,
+  setCurrentUserStart,
+  setCurrentUserSuccess,
+  setCurrentUserFailure,
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
-  deleteUserStart,
-  deleteUserSuccess,
-  deleteUserFailure,
   getUserStart,
   getUserSuccess,
   getUserFailure,
@@ -28,34 +25,12 @@ export const login = async (dispatch, payload, navigation, setLoading) => {
     }
   } catch (error) {
     setLoading(false);
-    console.log('chegou aqui...')
     const errorMessage = error.response?.data?.message || 'Erro ao fazer login.';
     showToast('error', errorMessage);
     dispatch(loginFailure());
   }
 };
 
-export const createNewUser = async (dispatch, payload, router, setLoading) => {
-  dispatch(addUserStart());
-  try {
-    const response = await publicRequest.post('/user/create', payload);
-    if (response) {
-      dispatch(addUserSuccess(response.data));
-      showToast('success', 'Usuário cadastrado com sucesso!');
-      router.push('/user/registrar/success');
-      return response;
-    } else {
-      setLoading(false);
-      showToast('error', 'Erro ao criar o usuário. Tente novamente.');
-    }
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || 'Erro ao criar o usuário.';
-    showToast('error', errorMessage);
-    setLoading(false);
-    dispatch(addUserFailure());
-    throw error;
-  }
-};
 
 export const updateUserData = async (dispatch, id, payload, user) => {
   dispatch(updateUserStart());
@@ -71,22 +46,6 @@ export const updateUserData = async (dispatch, id, payload, user) => {
     const errorMessage = error.response?.data?.message || 'Erro inesperado';
     showToast('error', errorMessage);
     dispatch(updateUserFailure());
-  }
-};
-
-export const deleteUser = async (dispatch, id, user) => {
-  dispatch(deleteUserStart());
-  try {
-    const response = await publicRequest.delete(`/user/${id}`, {
-      headers: { authorization: `Bearer ${user.token}` },
-    });
-    if (response) {
-      dispatch(deleteUserSuccess(id));
-      showToast('success', 'Usuário foi deletado!');
-    }
-  } catch (error) {
-    showToast('error', 'Erro ao deletar o usuário.');
-    dispatch(deleteUserFailure());
   }
 };
 
@@ -133,6 +92,23 @@ export const ForgotEmail = async (email, navigation) => {
   }
 };
 
+export const getCurrentUser = async (dispatch, user) => {
+  dispatch(setCurrentUserStart());
+  console.log('Fetching current user:', user?._id);
+  try {
+    const response = await publicRequest.get(`/user/${user._id}`, {
+      headers: { authorization: `Bearer ${user.token}` },
+    });
+    if (response) {
+      dispatch(setCurrentUserSuccess(response.data));
+    }
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'Erro ao carregar o usuário.';
+    showToast('error', errorMessage);
+    dispatch(setCurrentUserFailure());
+  }
+};  
+
 export const getUsersList = async (dispatch, user) => {
   dispatch(getUserStart());
   try {
@@ -145,4 +121,3 @@ export const getUsersList = async (dispatch, user) => {
     showToast('error', 'Erro ao carregar a lista de usuários.');
   }
 };
-

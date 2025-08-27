@@ -1,28 +1,17 @@
 import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, View, Text } from 'react-native';
-import { MotiView } from 'moti';
 import moment from 'moment';
 
 const HeaderHomePage = ({ user }) => {
-  console.log(user);
   const formatDate = (date) => {
     return moment(date).locale('pt-br').format('DD/MM/YYYY');
   };
-
-  const [animationDone, setAnimationDone] = useState(false);
-
   return (
     <View style={styles.container}>
       <Image style={styles.stretch} source={require('../../../assets/background.png')} />
-      
-      <MotiView
-        style={styles.shadowBox}
-        from={{ rotateX: '-100deg', opacity: 0 }}
-        animate={{ rotateX: '0deg', opacity: 1 }}
-        transition={{ type: 'timing', delay: 100, duration: 2000 }}
-        onDidAnimate={() => setAnimationDone(true)}
-      >
+      <View style={styles.shadowBox}>
         <SafeAreaView style={styles.boxAreaTop}>
+          {user.userType !== 'pacient' && <Text style={styles.textName}>{user?.score} pts</Text>}
           <Image style={styles.logoBoxArea} source={require('../../../assets/logo-bg-none.png')} />
         </SafeAreaView>
         <SafeAreaView style={styles.boxAreaBottom}>
@@ -32,7 +21,7 @@ const HeaderHomePage = ({ user }) => {
             <Text style={styles.stampDate}>{formatDate(user?.createdAt)}</Text>
           </View>
         </SafeAreaView>
-      </MotiView>
+      </View>
     </View>
   );
 };
@@ -41,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    maxHeight: '37%',
+    maxHeight: '30%',
   },
   stretch: {
     width: '100%',
@@ -69,7 +58,7 @@ const styles = StyleSheet.create({
     elevation: 30,
   },
   boxAreaTop: {
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
   },

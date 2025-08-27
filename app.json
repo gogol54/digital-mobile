@@ -1,41 +1,41 @@
 {
-  "cli": {
-    "version": ">= 14.5.0",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": true
+  "expo": {
+    "name": "CRO Digital Mobile",
+    "slug": "crodigital-mobile",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.jardeleko.crodigitalmobile",
+      "supportsTablet": true,
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.jardeleko.crodigitalmobile",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
       }
     },
-    "preview": {
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "buildType": "development"
-      }
-    },
-    "production": {
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "buildType": "release",
-        "scheme": "CRO Digital"
-      },
-      "autoIncrement": true
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "appleId": "jardeleko@outlook.com"
-      }
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
   }
 }

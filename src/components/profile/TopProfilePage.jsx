@@ -51,7 +51,7 @@ const TopProfilePage = () => {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: 40,
+    marginTop: 50,
     marginLeft: 20,
     fontSize: 24,
     fontWeight: '700',

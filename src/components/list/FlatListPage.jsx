@@ -8,6 +8,7 @@ import {
   Image, 
   SafeAreaView,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -29,14 +30,13 @@ const FlatListPage = () => {
   const list = useSelector((state) => state.dataset?.list)
   const [refreshing, setRefreshing] = useState(false)
   const dispatch = useDispatch()
-  
+
   const getFilteredPatients = () =>
     list.filter((item) =>
       selected === 'finalizados'
         ? ['finalizado', 'cancelado'].includes(item.status)
         : item.status === 'pendente'
   );
-
   
   const onRefresh = () => {
     setRefreshing(true)
@@ -81,7 +81,7 @@ const FlatListPage = () => {
         },
       ]}
     >
-      <SafeAreaView style={{ flexDirection: 'row', width: '100%' }}>
+      <SafeAreaView style={{ flexDirection: 'row', }}>
         <View
           style={[styles.hrDivider, { backgroundColor: getStatusColor(item.status) }]}
         />
@@ -106,9 +106,14 @@ const FlatListPage = () => {
           <View style={styles.divider} />
           <View style={styles.textContainer}>
             <Image source={{ uri: item?.pacientImg }} style={styles.photo} />
-            <View>
+            <View style={styles.textDetails}>
               <Text style={styles.name}>{item?.pacientName}</Text>
-              <Text style={styles.procedure}>{item?.dataType}</Text>
+              <Text style={styles.procedure}>{item?.dataType?.split(",").join(",\n")}</Text>
+              <TouchableOpacity style={styles.boxDetails} onPress={() => navigation.navigate('Resume', { appointment: item })}>
+                <Text style={[styles.buttonTouch, { backgroundColor: getStatusColor(item.status) }]}>
+                  Visualizar
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -117,7 +122,7 @@ const FlatListPage = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, minHeight: '100%' }}>
       <Text style={styles.title}>Agendamentos</Text>
       <View style={styles.row}>
         <Pressable
@@ -138,7 +143,7 @@ const FlatListPage = () => {
         data={getFilteredPatients()}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
-        style={{ flex: 1, bottom: 10 }}
+        style={{ flex: 1  }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -156,7 +161,7 @@ const FlatListPage = () => {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: 40,
+    marginTop: 50,
     marginLeft: 20,
     fontSize: 24,
     fontWeight: '700',
@@ -192,7 +197,7 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: '#fff',
     marginHorizontal: '5%',
-    padding: 10,
+    padding: 0,
     marginVertical: 8,
     borderRadius: 8,
     elevation: 3,
@@ -229,11 +234,21 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 20,
-    backgroundColor: '#ececec'
+    backgroundColor: '#1f2937',
   },
   textContainer: {
     flexDirection: 'row',
     marginTop: 10,
+    marginBottom: 20, 
+    alignItems: 'center',
+  },
+  boxDetails: {
+    marginLeft: 12,
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    padding: 10,
+    
   },
   name: {
     fontSize: 16,
@@ -249,7 +264,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#ababab',
   },
-
+  buttonTouch: {
+    backgroundColor: '#1f2937',
+    maxHeight: 50,
+    maxWidth: 110,
+    justifyContent: 'center',
+    alignContent: 'center', 
+    textAlign: 'center',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },  
   modalOverlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },

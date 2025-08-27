@@ -1,4 +1,4 @@
-import { publicRequest } from "../../../axios.config"
+import { publicRequest } from '../../../axios.config';
 import { 
   getOneFileFailure, 
   getOneFileStart, 
@@ -6,6 +6,9 @@ import {
   getFilesStart, 
   getFilesSuccess, 
   getFilesFailure, 
+  getAnalysisStart,
+  getAnalysisSuccess,
+  getAnalysisFailure,
   getStatusStart,
   getStatusSuccess,
   getStatusFailure,
@@ -15,27 +18,44 @@ import {
   addFileStart, 
   addFileSuccess, 
   addFileFailure,
-  deleteFileStart, 
-  deleteFileSuccess, 
-  deleteFileFailure, 
 } from "../redux/dataRedux"
-import { showToast } from "../functions/showToast";
+import { showToast } from "../functions/showToast"
 
-export const createRequestExame = async (dispatch, payload, navigation, user) => {
+export const createRequestExame = async (dispatch, payload, router, user) => {
   dispatch(addFileStart())
   try {
     const response = await publicRequest.post('/file/create', payload, {
       headers: { authorization: `Bearer ${user.token}` }
     });
+    const dataPut = { points: payload.info.points }
+    if(response) {
+      const res = await publicRequest.put(`/user/${payload.createdById}/score`, dataPut, {
+          headers: { authorization: `Bearer ${user.token}` }
+        })
+      }
     if(response.data.success === true){
       dispatch(addFileSuccess(payload))
       showToast('success', 'Solicitação gerada com sucesso!')
-      navigation.navigate('List') 
+      router.push('/lista') 
     }
   } catch (error) {
     showToast('error', error.message)
     dispatch(addFileFailure())
+  }
+}
 
+export const getAnalysis = async (dispatch, user, payload) => {
+  dispatch(getAnalysisStart())
+  try{
+    const response = await publicRequest.post('/file/data/analysis', payload, {
+      headers: { authorization: `Bearer ${user.token}` }
+    });
+    dispatch(getAnalysisSuccess(response.data))
+  }
+  catch(err){
+    showToast('error', err.message)
+    console.log(err)
+    dispatch(getAnalysisFailure())
   }
 }
 
@@ -66,44 +86,42 @@ export const getSingleData = async (dispatch, id, user) => {
   }
 }
 
-export const listOfFiles = async (dispatch, user) => {
-  dispatch(getFilesStart())
+export const listOfFiles = async (dispatch, user, page, limit = 25) => {
+  dispatch(getFilesStart());
   try {
-    let response;
-    if (user.userType === 'pacient') {
-      // Buscando arquivos específicos do paciente
-      response = await publicRequest.get(`/file/list/patient/${user._id}`,{
-        headers: { authorization: `Bearer ${user.token}` } 
-      });
-    } 
-    if (user.userType === 'dentist') {
-      response = await publicRequest.get(`/file/list/${user._id}`,{
-        headers: { authorization: `Bearer ${user.token}` }
-      });
-    }
-    if (user.userType === 'admin') {
-      response = await publicRequest.get('/file/superuser/files',{
-        headers: { authorization: `Bearer ${user.token}` }
-      });
-    }
+    const params = { page, limit };
+    const headers = { authorization: `Bearer ${user.token}` };
+    let endpoint;
 
-    if (response) {
-      dispatch(getFilesSuccess(response.data)); 
+    switch (user.userType) {
+      case 'pacient':
+        endpoint = `/file/list/patient/${user._id}`;
+        break;
+      case 'dentist':
+        endpoint = `/file/list/${user._id}`;
+        break;
+      case 'admin':
+        endpoint = '/file/superuser/files';
+        break;
+      default:
+        throw new Error('Tipo de usuário inválido');
     }
+    const response = await publicRequest.get(endpoint, { params, headers });
+    dispatch(getFilesSuccess(response.data));
   } catch (error) {
     dispatch(getFilesFailure());
-    showToast('error', 'Erro ao carregar os arquivos.');
+    showToast('error', error);
   }
-}
+};
 
 export const updateDataQuery = async (dispatch, payload, user) => {
   dispatch(updateFileStart());
   const data = {
     files: payload.files, 
+    fileType: payload.fileType,
     status: payload.status, 
     feedback: payload.feedback
   };
-  
   try {
     const response = await publicRequest.put(
       `/file/update/${payload.id}`, 

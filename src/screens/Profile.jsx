@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import BottomBar from '../components/BottomBar'
 import TopProfilePage from '../components/profile/TopProfilePage'
 import MenuBar from '../components/profile/MenuBar'
 
@@ -11,7 +10,6 @@ const Profile = () => {
         <TopProfilePage />
         <MenuBar />
       </View>
-      <BottomBar />
     </>
   )
 }

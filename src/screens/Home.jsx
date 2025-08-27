@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import HeaderHomePage from '../components/home/HeaderHomePage';
 import MainHomePage from '../components/home/MainHomePage';
-import BottomBar from '../components/BottomBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsersList } from '../lib/actions/userRequest';
 import { listOfFiles, getStatus } from '../lib/actions/requestData';
@@ -33,7 +32,7 @@ const Home = () => {
         getUsersList(dispatch, user);
         getStatus(dispatch, user);
       }
-      listOfFiles(dispatch, user);
+      listOfFiles(dispatch, user, 1, 25);
     }
   }, [isReady, user, dispatch]);
 
@@ -42,7 +41,7 @@ const Home = () => {
 >
       {user && <HeaderHomePage user={user} />}
       {user && <MainHomePage user={user} />}
-      <BottomBar />
+    
     </View>
   );
 };

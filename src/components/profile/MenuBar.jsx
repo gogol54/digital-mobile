@@ -83,7 +83,7 @@ const MenuBar = () => {
       <View>
         <TouchableOpacity
           style={styles.boxContent}
-          onPress={() => navigation.navigate('List')}
+          onPress={() => navigation.navigate('Exames')}
         >
           <View>
             <Ionicons

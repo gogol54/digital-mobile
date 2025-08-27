@@ -7,7 +7,6 @@ import {
   View,
   StyleSheet
 } from 'react-native'
-import BottomBar from '../components/BottomBar'
 import FlatListPage from '../components/list/FlatListPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsersList } from '../lib/actions/userRequest'
@@ -39,7 +38,6 @@ const List = () => {
       <View style={styles.container}>
        <FlatListPage />
       </View>
-      <BottomBar />
     </>
   )
 }

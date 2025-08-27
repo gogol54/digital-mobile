@@ -28,8 +28,7 @@ export const uploadFileToS3 = async (file) => {
     const uploadResult = await s3.send(command);
 
     // Gerar a URL pública do arquivo
-    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_DEFAULT_REGION}.amazonaws.com/files/avatar/mobile/${fileName}`;
-
+    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.sa-east-1.amazonaws.com/files/avatar/mobile/${fileName}`;
     console.log('Upload bem-sucedido:', fileUrl);
     return fileUrl; // Retorna a URL para ser usada no app
   } catch (error) {
