@@ -95,6 +95,8 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: 10,
+    paddingHorizontal: '2%',
   },
   listContent: {
     paddingBottom: 120, // deixa espaço pra barra fixa

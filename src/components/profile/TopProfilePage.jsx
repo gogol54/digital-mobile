@@ -17,7 +17,6 @@ const TopProfilePage = () => {
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Configurações de Perfil</Text>
       <MotiView
         style={styles.boxArea}
         from={{ translateX: -300 }}
@@ -50,6 +49,9 @@ const TopProfilePage = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+  },
   title: {
     marginTop: 50,
     marginLeft: 20,

@@ -161,7 +161,7 @@ const FlatListPage = () => {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: 50,
+    marginTop: 60,
     marginLeft: 20,
     fontSize: 24,
     fontWeight: '700',
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 10,
     padding: 8,
     borderRadius: 40,
