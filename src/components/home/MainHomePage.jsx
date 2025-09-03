@@ -107,12 +107,7 @@ const MainHomePage = ({ user }) => {
                   onPress={() => navigateToScreen(appointment)}
                   style={{ marginTop: 40 }}
                 >
-                  <Ionicons
-                    name="chevron-forward-outline"
-                    color="#9898"
-                    size={25}
-                    style={styles.arrowRight}
-                  />
+              
                 </TouchableOpacity>
               </View>
             </View>

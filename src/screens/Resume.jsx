@@ -52,6 +52,7 @@ const Resume = () => {
     );
   };
 
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
@@ -60,6 +61,15 @@ const Resume = () => {
           <Ionicons name="arrow-back-outline" size={30} color="#1f2937" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Detalhes do Exame</Text>
+
+        {appointment?.pdf && (
+          <TouchableOpacity
+            style={{ marginLeft: "auto" }}
+            onPress={() => handleDownload(appointment.pdf)}
+          >
+            <Ionicons name="download-outline" size={26} color="#1f2937" />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Avatar + Nome */}
