@@ -24,8 +24,9 @@ const UpdateOccupationInfo = () => {
   };
 
   const handleSave = () => {
+    const { password, ...sanitizedFormData } = formData;
     // Aqui você pode enviar os dados atualizados para o backend
-    updateUserData(dispatch, user._id, formData, user)
+    updateUserData(dispatch, user._id, sanitizedFormData, user)
     navigation.goBack(); // Voltar para a página anterior
   };
 

@@ -60,7 +60,8 @@ const UpdatePersonalData = () => {
 
   const handleSave = () => {
     // Crie um objeto com os dados para envio
-    const sendData = { ...formData };
+    
+    const { password, ...sanitizedFormData } = formData;
 
     // Verifique se a data foi alterada antes de modificá-la
     if (formData.birthdate && formData.birthdate instanceof Date) {
@@ -68,7 +69,7 @@ const UpdatePersonalData = () => {
     }
   
     // Enviar para o backend
-    updateUserData(dispatch, user._id, sendData, user);
+    updateUserData(dispatch, user._id, sanitizedFormData, user);
     navigation.goBack();
   };
 
