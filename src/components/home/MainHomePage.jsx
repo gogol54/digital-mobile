@@ -92,10 +92,20 @@ const MainHomePage = ({ user }) => {
                   source={{ uri: appointment?.pacientImg || "https://digital1-clinica2-radio4-odontologico8-s3.sa-east-1.amazonaws.com/files/avatar/1734352856296-default_user-whitebg.png" }} 
                 />
                 <View style={styles.dataColumnText}>
-                  <Text style={styles.responseName}>{appointment?.pacientName}</Text>
-                  <Text style={styles.dataColumnType}>
-                    {appointment?.dataType?.split(",").join(",\n")}
-                  </Text>                  
+                  <Text 
+                    style={styles.responseName} 
+                    numberOfLines={2} 
+                    ellipsizeMode="tail"
+                  >
+                    {appointment?.pacientName}
+                  </Text>
+                  <Text 
+                    style={styles.dataColumnType} 
+                    numberOfLines={2} 
+                    ellipsizeMode="tail"
+                  >
+                    {appointment?.dataType?.split(",").join(", ")}
+                  </Text>                    
                   <TouchableOpacity
                     onPress={() => navigateToScreen(appointment)}
                     style={[styles.dataColumnBtn, { backgroundColor: getStatusColor(appointment?.status) }]}
@@ -104,12 +114,17 @@ const MainHomePage = ({ user }) => {
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                  onPress={() => navigateToScreen(appointment)}
-                  style={{ marginTop: 40 }}
-                >
-              
+                    onPress={() => navigateToScreen(appointment)}
+                    style={[styles.dataColumnBtn, { backgroundColor: 'transparent' }]}
+                  >
+                    <Ionicons 
+                    name="chevron-forward" 
+                    size={24} 
+                    color="#ababab" 
+                    style={styles.arrowRight}
+                  />
                 </TouchableOpacity>
-              </View>
+              </View>             
             </View>
           ))
           :
@@ -136,6 +151,14 @@ const styles = StyleSheet.create({
     marginTop: 0,
     width: '100%',
     backgroundColor: 'white',
+  },
+  gridContainer: {
+    width: '100%',
+    backgroundColor: '#f8f8fb',
+    borderRadius: 12,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   boxList: {
     flex: 1,
@@ -176,56 +199,52 @@ const styles = StyleSheet.create({
     color: '#ababab',
     
   },
-  gridContainer: {
-    width: '100%',
-    height: 160,  
-    backgroundColor: '#f8f8fb',
-    borderRadius: 12,
-    padding: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
+    width: 40,      // diminui para liberar mais espaço
+    height: 40,
+    borderRadius: 20,
     backgroundColor: '#1f2937',
-    marginLeft: 5,
-    marginTop: 40,
-  },
-  responseName: {
-    color: '#1f2937',
-    marginTop: 34,
-    marginLeft: -10,
-    fontSize: 16, 
-    fontFamily: 'Montserrat_700Regular',
-    fontWeight: '700',
-  },
-  arrowRight: {
-    marginTop: '25%',
-    marginRight: 20,
-    justifyContent: 'center',
+    marginRight: 12,
   },
   dataColumnText: {
-    flexDirection: 'column', 
-    marginLeft: 8,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    flexShrink: 1,
+    minWidth: 0,    // essencial
   },
+
+  responseName: {
+    color: '#1f2937',
+    marginTop: 4,
+    fontSize: 16,
+    fontFamily: 'Montserrat_700Regular',
+    fontWeight: '700',
+    flexShrink: 1,
+    numberOfLines: 2,   // ou 3 se quiser
+    ellipsizeMode: 'tail',
+  },
+
+  dataColumnBtn: {
+    alignSelf: 'center',       // centraliza horizontalmente
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+    height: 30,
+    borderRadius: 6,
+    marginTop: 8,
+  },
+
+  arrowRight: {
+    alignSelf: 'center',
+    marginRight: 10,
+  },
+
   dataColumnType: {
     fontSize: 12, 
     fontFamily: 'Montserrat_400Regular', 
     fontWeight: '400', 
     marginTop: 10, 
     marginBottom: 4,
-  },
-  dataColumnBtn: {
-    alignItems: 'center',
-    backgroundColor: '#1f2937', 
-    marginTop: 10,
-    marginLeft: -25, 
-    width: 'auto', 
-    height: 30, 
-    padding: 5, 
-    borderRadius: 4,
   },
   nullBoxImage: { 
     width: 70, 
